@@ -1,0 +1,29 @@
+body {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center; /* vertical */
+    justify-content: center; /* horizontal */
+}
+form {
+    border: 1px solid black;
+    border-radius: 5px;
+    top: 120px;
+    position: relative;
+    padding: 40px;
+    width: 500px;
+}
+.register-button {
+    width: 100%;
+}
+.submit-button {
+    width: 45%;
+}
+#buttons {
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+}
+a {
+    width: 45%;
+}
