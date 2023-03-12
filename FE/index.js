@@ -3,6 +3,7 @@ import eformidable from 'express-formidable';
 import session from 'express-session';
 import register from './routes/register.js';
 import login from './routes/login.js';
+import questions from './routes/questions.js';
 import morgan from 'morgan';
 import path from 'path';
 
@@ -19,6 +20,7 @@ app.use(session({
 
 app.use('/register', register);
 app.use('/login', login);
+app.use('/questions', questions);
 
 // Temporary endpoints
 app.get('/logout', (req, res) => {

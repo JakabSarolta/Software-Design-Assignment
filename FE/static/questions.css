@@ -1,0 +1,14 @@
+.question {
+    border: 1px solid #000000;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 5px;
+    background-color: #FFFFFF;
+}
+
+.tags {
+    border: 1px solid #000000;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #FFFFFF;
+}

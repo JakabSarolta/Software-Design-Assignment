@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Questions</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='/questions.css'>
+</head>
+<body>
+    <% for(let i = 0; i < questions.length; i++) { %>
+        <div class="question">
+            <h2><%= questions[i].author %></h2>
+            <p><%= questions[i].title %></p>
+            <p><%= questions[i].content %></p>
+            <p><%= questions[i].date %></p>
+            <div class="tags">
+                <% for(let j = 0; j < questions[i].tags.length; j++) { %>
+                    <p><%= questions[i].tags[j].name %></p>
+                <% } %>
+            </div>
+        </div>
+    <% } %>
+</body>
+</html>
