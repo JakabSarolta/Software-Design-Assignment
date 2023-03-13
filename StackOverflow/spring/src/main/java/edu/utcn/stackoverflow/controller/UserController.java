@@ -4,6 +4,7 @@ import edu.utcn.stackoverflow.controller.dto.UserInDto;
 import edu.utcn.stackoverflow.controller.dto.UserOutDto;
 import edu.utcn.stackoverflow.controller.mapper.UserMapper;
 import edu.utcn.stackoverflow.dao.UserDao;
+import edu.utcn.stackoverflow.model.Question;
 import edu.utcn.stackoverflow.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,24 @@ public class UserController {
     @Autowired
     private UserMapper userMapper;
 
+    private Boolean validateUserName(String userName){
+        if(userDao.findByUserName(userName) != null){
+            return false;
+        }
+        return true;
+    }
+
+    private Boolean validateEmail(String email){
+        if(userDao.findByEmail(email) != null){
+            return false;
+        }
+        return true;
+    }
+
     @GetMapping
-    public Collection<User> getAllUsers() {
-        return userDao.findAll();
+    public Collection<UserOutDto> getAllUsers() {
+        Collection<UserOutDto> userOutDtos = userMapper.dtosFromUsers(userDao.findAll());
+        return userOutDtos; //map to outdto
     }
 
     @GetMapping("/{id}")
@@ -66,6 +82,9 @@ public class UserController {
         }
         User user = userMapper.userFromDto(userInDto);
         user.setId(id);
+        User userToBeReplaced = userDao.getById(id);
+        Collection<Question> questions = userToBeReplaced.getQuestions();
+        user.setQuestions(questions);
         User user2 = userDao.saveAndFlush(user);
         return userMapper.dtoFromUser(user2);
     }
@@ -76,19 +95,5 @@ public class UserController {
             throw new NotFoundException();
         }
         userDao.delete(userDao.getById(id));
-    }
-
-    private Boolean validateUserName(String userName){
-        if(userDao.findByUserName(userName) != null){
-            return false;
-        }
-        return true;
-    }
-
-    private Boolean validateEmail(String email){
-        if(userDao.findByEmail(email) != null){
-            return false;
-        }
-        return true;
     }
 }

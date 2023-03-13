@@ -10,7 +10,7 @@
 <body>
     <% for(let i = 0; i < questions.length; i++) { %>
         <div class="question">
-            <h2><%= questions[i].author %></h2>
+            <h2><%= questions[i].author.userName %></h2>
             <p><%= questions[i].title %></p>
             <p><%= questions[i].content %></p>
             <p><%= questions[i].date %></p>
@@ -19,6 +19,12 @@
                     <p><%= questions[i].tags[j].name %></p>
                 <% } %>
             </div>
+            <% if(questions[i].author.userName === username){ %>
+                <div class="buttons">
+                    <button class="btn btn-warning">Edit</button>
+                    <button class="btn btn-danger">Delete</button>
+                </div>
+            <% } %>
         </div>
     <% } %>
 </body>

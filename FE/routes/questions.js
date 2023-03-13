@@ -26,7 +26,7 @@ router.get('/', (req, res) => {
         console.log('Success:', data);
         questions = data;
         res.type('.html');
-        res.render('questions', {questions});
+        res.render('questions', {questions, username: req.session.user.userName});
     })
     .catch((error) => {
         console.error('Error:', error);

@@ -9,9 +9,9 @@ import java.util.Collection;
 @Data
 public class QuestionInDto {
     private String title;
-    private String author;
+    private String author; //username
     private String content;
     private Timestamp date;
     private String picture;
-    private Collection<String> tags;
+    private Collection<String> tags; //tag names
 }

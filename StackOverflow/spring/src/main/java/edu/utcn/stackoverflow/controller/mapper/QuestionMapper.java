@@ -12,6 +12,7 @@ import java.util.Collection;
 @Mapper(componentModel = "spring")
 public abstract class QuestionMapper {
     @Mapping(target = "tags", ignore = true)
+    @Mapping(target = "author", ignore = true)
     public abstract Question questionFromDto(QuestionInDto questionInDto);
 
     public abstract QuestionOutDto dtoFromQuestion(Question question);

@@ -3,6 +3,7 @@ package edu.utcn.stackoverflow.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Data //getters and setters
 @EqualsAndHashCode(callSuper = true)
@@ -18,4 +19,7 @@ public class User extends BaseEntity{
     private String phoneNumber;
     private Integer role;
     //0 for user, 1 for moderator
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "author")
+    private Collection<Question> questions;
 }

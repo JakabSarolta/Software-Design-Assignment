@@ -6,8 +6,10 @@ import edu.utcn.stackoverflow.controller.mapper.QuestionMapper;
 import edu.utcn.stackoverflow.controller.mapper.TagMapper;
 import edu.utcn.stackoverflow.dao.QuestionDao;
 import edu.utcn.stackoverflow.dao.TagDao;
+import edu.utcn.stackoverflow.dao.UserDao;
 import edu.utcn.stackoverflow.model.Question;
 import edu.utcn.stackoverflow.model.Tag;
+import edu.utcn.stackoverflow.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,8 @@ import java.util.Collection;
 public class QuestionController {
     @Autowired
     private QuestionDao questionDao;
+    @Autowired
+    private UserDao userDao;
     @Autowired
     private QuestionMapper questionMapper;
 //    @Autowired
@@ -44,6 +48,11 @@ public class QuestionController {
     @PostMapping
     public QuestionOutDto saveQuestion(@RequestBody QuestionInDto questionInDto) {
         Question question = questionMapper.questionFromDto(questionInDto);
+        User author = userDao.findByUserName(questionInDto.getAuthor());
+        if (author == null) {
+            throw new NotFoundException();
+        }
+        question.setAuthor(author);
         question.setTags(new ArrayList<>());
         for (String tagName : questionInDto.getTags()) {
             Tag tag = tagDao.findByName(tagName);
