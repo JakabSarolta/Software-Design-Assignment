@@ -27,8 +27,6 @@ public class QuestionController {
     private UserService userService;
     @Autowired
     private QuestionMapper questionMapper;
-//    @Autowired
-//    private TagMapper tagMapper;
     @Autowired
     private TagService tagService;
 
@@ -71,6 +69,7 @@ public class QuestionController {
             throw new NotFoundException();
         }
         question.setAnswers(new ArrayList<>());
+        question.setQuestionVotes(new ArrayList<>());
         question.setAuthor(author);
         Collection<Tag> tags = new ArrayList<>();
         for (String tagName : questionInDto.getTags()) {
@@ -95,6 +94,7 @@ public class QuestionController {
         question.setContent(questionInDto.getContent()); //content
         question.setPicture(questionInDto.getPicture()); //picture
         question.setAnswers(questionService.getQuestionById(questionId).getAnswers()); //answers
+        question.setQuestionVotes(questionService.getQuestionById(questionId).getQuestionVotes()); //questionVotes
         question.setTags(new ArrayList<>()); //tags
         for (String tagName : questionInDto.getTags()) {
             Tag tag = tagService.findByName(tagName);
@@ -110,6 +110,7 @@ public class QuestionController {
 
     @DeleteMapping("/{questionId}")
     public void deleteQuestion(@PathVariable("questionId") Long questionId) {
+        // maybe we will need to delete the answers, questionVotes and tags of the question before deleting it
         questionService.deleteQuestion(questionService.getQuestionById(questionId));
     }
 }

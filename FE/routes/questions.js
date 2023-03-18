@@ -108,6 +108,22 @@ router.post('/filter', (req, res) => {
         }
     })
     .then(data => {
+        let upVotes = 0;
+        let downVotes = 0;
+        for (let i=0;i<data.length; i++) {
+            upVotes = 0;
+            downVotes = 0;
+            for (let j=0;j<data[i].questionVotes.length; j++) {
+                if (data[i].questionVotes[j].voteType === "up") {
+                    upVotes++;
+                } else {
+                    downVotes++;
+                }
+            }
+            data[i].upVotes = upVotes;
+            data[i].downVotes = downVotes;
+        }
+
         res.type('.html');
         res.render('questions', {questions: data, username: req.session.user.userName, ftype, fvalue});
     })
@@ -130,6 +146,21 @@ router.get('/', (req, res) => {
         }
     })
     .then(data => {
+        let upVotes = 0;
+        let downVotes = 0;
+        for (let i=0;i<data.length; i++) {
+            upVotes = 0;
+            downVotes = 0;
+            for (let j=0;j<data[i].questionVotes.length; j++) {
+                if (data[i].questionVotes[j].voteType === "up") {
+                    upVotes++;
+                } else {
+                    downVotes++;
+                }
+            }
+            data[i].upVotes = upVotes;
+            data[i].downVotes = downVotes;
+        }
         questions = data;
         res.type('.html');
         res.render('questions', {questions, username: req.session.user.userName, ftype: null, fvalue: null});
@@ -140,6 +171,118 @@ router.get('/', (req, res) => {
     });
 });
 
+router.post('/upvote/:id', (req, res) => {
+    const id = req.params.id;
+    const user = req.session.user.userName;
+
+    // fetch the question from the server, check if the current session user has already voted, if yes then throw and error, else add the vote
+    fetch('http://localhost:8080/questions/' + id, {
+        method: 'GET'
+    })
+    .then(response => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            throw new Error('Server error');
+        }
+    })
+    .then(data => {
+        let alreadyVoted = false;
+        for (let i=0;i<data.questionVotes.length; i++) {
+            if (data.questionVotes[i].user.userName === user) {
+                alreadyVoted = true;
+            }
+        }
+        if (alreadyVoted) {
+            throw new Error('You have already voted');
+        } else {
+            const vote = {
+                question: id,
+                author: user,
+                voteType: "up"
+            }
+            fetch('http://localhost:8080/questionvotes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(vote)
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    res.redirect('/questions');
+                } else {
+                    throw new Error('Server error');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                res.send('Error');
+            });
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        res.send('Error');
+    });
+});
+
+router.post('/downvote/:id', (req, res) => {
+    const id = req.params.id;
+    const user = req.session.user.userName;
+
+    // fetch the question from the server, check if the current session user has already voted, if yes then throw and error, else add the vote
+    fetch('http://localhost:8080/questions/' + id, {
+        method: 'GET'
+    })
+    .then(response => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            throw new Error('Server error');
+        }
+    })
+    .then(data => {
+        let alreadyVoted = false;
+        for (let i=0;i<data.questionVotes.length; i++) {
+            if (data.questionVotes[i].user.userName === user) {
+                alreadyVoted = true;
+            }
+        }
+        if (alreadyVoted) {
+            throw new Error('You have already voted');
+        } else {
+            const vote = {
+                question: id,
+                author: user,
+                voteType: "down"
+            }
+            fetch('http://localhost:8080/questionvotes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(vote)
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    res.redirect('/questions');
+                } else {
+                    throw new Error('Server error');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                res.send('Error');
+            });
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        res.send('Error');
+    });
+});
+            
 router.post('/update/:id', (req, res) => {
     const id = req.params.id;
     let tags = req.fields.tags;

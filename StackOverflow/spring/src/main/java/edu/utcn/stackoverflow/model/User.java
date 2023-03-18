@@ -22,4 +22,6 @@ public class User extends BaseEntity{
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "author")
     private Collection<Question> questions;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "author")
+    private Collection<QuestionVote> questionVotes;
 }

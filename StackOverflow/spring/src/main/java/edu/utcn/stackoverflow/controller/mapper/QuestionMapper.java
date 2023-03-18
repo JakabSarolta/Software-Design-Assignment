@@ -13,6 +13,8 @@ import java.util.Collection;
 public abstract class QuestionMapper {
     @Mapping(target = "tags", ignore = true)
     @Mapping(target = "author", ignore = true)
+    @Mapping(target = "questionVotes", ignore = true)
+    @Mapping(target = "answers", ignore = true)
     public abstract Question questionFromDto(QuestionInDto questionInDto);
 
     public abstract QuestionOutDto dtoFromQuestion(Question question);

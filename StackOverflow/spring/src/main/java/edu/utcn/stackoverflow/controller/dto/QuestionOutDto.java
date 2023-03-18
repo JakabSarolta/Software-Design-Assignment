@@ -15,4 +15,5 @@ public class QuestionOutDto {
     private String picture;
     private Collection<TagOutDto> tags;
     private Collection<AnswerOutDto> answers;
+    private Collection<QuestionVoteOutDto> questionVotes;
 }

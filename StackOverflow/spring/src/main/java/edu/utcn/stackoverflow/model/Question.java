@@ -30,4 +30,7 @@ public class Question extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "question")
     private Collection<Answer> answers;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "question")
+    private Collection<QuestionVote> questionVotes;
 }

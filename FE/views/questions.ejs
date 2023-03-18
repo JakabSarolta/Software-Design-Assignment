@@ -56,6 +56,9 @@
             <p><%= questions[i].title %></p>
             <p><%= questions[i].content %></p>
             <p><%= questions[i].date %></p>
+            <p>Upvotes: <%= questions[i].upVotes %></p>
+            <p>Downvotes: <%= questions[i].downVotes %></p>
+
             <div class="tags">
                 <% for(let j = 0; j < questions[i].tags.length; j++) { %>
                     <p><%= questions[i].tags[j].name %></p>
@@ -65,6 +68,14 @@
                 <a href="/questions/<%= questions[i].id %>">
                     <button type="button" class="btn btn-info bottom-btn">View</button>
                 </a>
+                <% if(questions[i].author.userName != username){ %>
+                    <form method="POST" action="/questions/upvote/<%= questions[i].id %>">
+                        <button type="submit" class="btn btn-success bottom-btn">Like</button>
+                    </form>
+                    <form method="POST" action="/questions/downvote/<%= questions[i].id %>">
+                        <button type="submit" class="btn btn-danger bottom-btn">Dislike</button>
+                    </form>
+                <% } %>
                 <% if(questions[i].author.userName === username){ %>
                     <form method="GET" action="/questions/update/<%= questions[i].id %>">
                         <button type="submit" class="btn btn-warning bottom-btn">Edit</button>
