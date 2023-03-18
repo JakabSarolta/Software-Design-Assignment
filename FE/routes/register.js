@@ -45,8 +45,7 @@ router.post('/', (req, res) => {
     })
     .then(data => {
         console.log('Success:', data);
-        res.type('text');
-        res.send('OK');
+        res.redirect('/login');
     })
     .catch((error) => {
         console.error('Error:', error);

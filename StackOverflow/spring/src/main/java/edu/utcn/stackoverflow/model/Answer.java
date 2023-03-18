@@ -1,4 +1,25 @@
 package edu.utcn.stackoverflow.model;
 
-public class Answer {
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+import javax.persistence.*;
+import java.sql.Timestamp;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@ToString(callSuper = true)
+@Entity
+@Table(name = "answers")
+public class Answer extends BaseEntity {
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User author;
+    private String content;
+    private String picture;
+    private Timestamp date;
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id")
+    private Question question;
 }

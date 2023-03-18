@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Update Answer</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel='stylesheet' type='text/css' media='screen' href='/updateAnswer.css'>
+</head>
+<body>
+    <form class="submitForm" method="POST" action="/answers/update/<%= questionId %>/<%= answer.id %>">
+        <div class="mb-3">
+            <label for="content" class="form-label">Content</label>
+            <input required type="text" class="form-control bg-info-subtle" id="content" name="content" placeholder="<%= answer.content %>">
+        </div>
+        <button type="submit" class="submit-button btn btn-info text-info-subtle bg-info-subtle">Update answer</button>
+    </form>
+</body>
+</html>

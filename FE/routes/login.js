@@ -30,8 +30,7 @@ router.post('/', (req, res) => {
         // log in the user, store in cookie, redirect to home page
         if (bcrypt.compareSync(password, data.password)) {
             req.session.user = data;
-            res.type('text');
-            res.send('OK');
+            res.redirect('/questions');
         } else {
             throw new Error('Wrong password');
         }

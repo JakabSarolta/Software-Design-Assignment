@@ -27,4 +27,7 @@ public class Question extends BaseEntity {
             joinColumns = @JoinColumn(name = "question_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Collection<Tag> tags;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "question")
+    private Collection<Answer> answers;
 }

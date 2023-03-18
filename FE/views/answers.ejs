@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Question</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel='stylesheet' type='text/css' media='screen' href='/answers.css'>
+</head>
+<body>
+    <div>
+        <h1><%= question.title %></h1>
+        <p><%= question.content %></p>
+        <p>Tags: <%= tags %></p>
+        <p>Asked by: <%= username %></p>
+        <p>Asked on: <%= question.date %></p>
+        <p>Answers: <%= answers.length %></p>
+        <a href="/questions">
+            <button type="button" class="register-button btn btn-info text-info-subtle bg-info-subtle">Back to questions</button>
+        </a>
+        <% if (username === question.author.userName) { %>
+            <a href="/questions/update/<%= question.id %>">
+                <button type="button" class="register-button btn btn-info text-info-subtle bg-info-subtle">Update question</button>
+            </a>
+            <form method="POST" action="/questions/delete/<%= question.id %>">
+                <button type="submit" class="register-button btn btn-info text-info-subtle bg-info-subtle">Delete question</button>
+            </form>
+        <% } %>
+
+        <form method="POST" action="/answers/create/<%= question.id %>">
+            <div class="mb-3">
+                <label for="content" class="form-label">Content</label>
+                <input required type="text" class="form-control bg-info-subtle" id="content" name="content">
+            </div>
+            <button type="submit" class="register-button btn btn-info text-info-subtle bg-info-subtle">Answer</button>
+        </form>
+
+        <% for(i = 0; i < question.answers.length; i++) { %>
+            <div class="answer">
+                <p><%= question.answers[i].content %></p>
+                <p>Answered by: <%= question.answers[i].author.userName %></p>
+                <p>Answered on: <%= question.answers[i].date %></p>
+                <% if (username === question.answers[i].author.userName) { %>
+                    <a href="/answers/update/<%= question.id %>/<%= question.answers[i].id %>">
+                        <button type="button" class="register-button btn btn-info text-info-subtle bg-info-subtle">Update answer</button>
+                    </a>
+
+                    <form method="POST" action="/answers/delete/<%= question.id %>/<%= question.answers[i].id %>">
+                        <button type="submit" class="register-button btn btn-info text-info-subtle bg-info-subtle">Delete answer</button>
+                    </form>
+                <% } %>
+            </div>
+        <% } %>
+    </div>
+</body>
+</html>
