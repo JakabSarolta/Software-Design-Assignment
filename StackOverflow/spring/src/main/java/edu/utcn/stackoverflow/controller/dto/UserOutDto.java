@@ -1,11 +1,10 @@
 package edu.utcn.stackoverflow.controller.dto;
 
 import lombok.Data;
-import lombok.ToString;
 
 @Data
 public class UserOutDto {
-    private Integer id;
+    private Long id;
     private String lastName;
     private String firstName;
     private String userName;

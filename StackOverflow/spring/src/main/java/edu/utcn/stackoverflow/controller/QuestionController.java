@@ -3,7 +3,6 @@ package edu.utcn.stackoverflow.controller;
 import edu.utcn.stackoverflow.controller.dto.QuestionInDto;
 import edu.utcn.stackoverflow.controller.dto.QuestionOutDto;
 import edu.utcn.stackoverflow.controller.mapper.QuestionMapper;
-import edu.utcn.stackoverflow.dao.TagDao;
 import edu.utcn.stackoverflow.model.Question;
 import edu.utcn.stackoverflow.model.Tag;
 import edu.utcn.stackoverflow.model.User;
@@ -14,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -32,15 +32,14 @@ public class QuestionController {
 
     @GetMapping("/postman")
     public Collection<QuestionOutDto> getQuestionsInPostman() {
-        Collection<Question> questions = questionService.getQuestionsStartingFromIndexSortedByDateDesc(-1);
+        Collection<Question> questions = questionService.getQuestionsStartingFromIndexSortedByDateDesc(1, 2);
         return questionMapper.dtosFromQuestions(questions);
     }
 
     @GetMapping("/{questionId}")
     public QuestionOutDto getQuestionById(@PathVariable("questionId") Long questionId) {
         Question question = questionService.getQuestionById(questionId);
-        QuestionOutDto questionOutDto = questionMapper.dtoFromQuestion(question);
-        return questionOutDto;
+        return questionMapper.dtoFromQuestion(question);
     }
 
     @GetMapping("/filter/tag/{tagName}")
@@ -68,12 +67,12 @@ public class QuestionController {
     }
 
     @PostMapping
-    public QuestionOutDto saveQuestion(@RequestBody QuestionInDto questionInDto) {
-        Question question = questionMapper.questionFromDto(questionInDto);
-        User author = userService.findByUserName(questionInDto.getAuthor());
-        if (author == null) {
+    public QuestionOutDto saveQuestion(@RequestBody @Valid QuestionInDto questionInDto) {
+        if (userService.findByUserName(questionInDto.getAuthor()) == null) {
             throw new NotFoundException();
         }
+        Question question = questionMapper.questionFromDto(questionInDto);
+        User author = userService.findByUserName(questionInDto.getAuthor());
         question.setAnswers(new ArrayList<>());
         question.setQuestionVotes(new ArrayList<>());
         question.setAuthor(author);
@@ -89,12 +88,12 @@ public class QuestionController {
         }
         question.setTags(tags);
         Question question2 = questionService.createQuestion(question);
-        QuestionOutDto questionOutDto = questionMapper.dtoFromQuestion(question2);
-        return questionOutDto;
+        return questionMapper.dtoFromQuestion(question2);
     }
 
     @PutMapping("/{questionId}")
-    public Question updateQuestion(@PathVariable("questionId") Long questionId, @RequestBody QuestionInDto questionInDto) {
+    public Question updateQuestion(@PathVariable("questionId") Long questionId,
+                                   @RequestBody @Valid QuestionInDto questionInDto) {
         Question question = questionService.getQuestionById(questionId);
         question.setTitle(questionInDto.getTitle()); //title
         question.setContent(questionInDto.getContent()); //content

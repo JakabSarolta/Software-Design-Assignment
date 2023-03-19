@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @Slf4j
 @RestController
 @RequestMapping("/answervotes")
@@ -28,14 +30,13 @@ public class AnswerVotesController {
     private AnswerVoteMapper answerVoteMapper;
 
     @PostMapping
-    public AnswerVoteOutDto addAnswerVote(@RequestBody AnswerVoteInDto answerVoteInDto) {
+    public AnswerVoteOutDto addAnswerVote(@RequestBody @Valid AnswerVoteInDto answerVoteInDto) {
         AnswerVote answerVote = answerVoteMapper.answerVoteFromDto(answerVoteInDto);
         answerVote.setAuthor(userService.findByUserName(answerVoteInDto.getAuthor()));
         answerVote.setAnswer(answerService.getAnswerById(answerVoteInDto.getAnswer()));
         AnswerVote answerVote1 = answerVoteService.createAnswerVote(answerVote);
         answerVote1.getAnswer().getAnswerVotes().add(answerVote1);
         answerVote1.getAuthor().getAnswerVotes().add(answerVote1);
-        AnswerVoteOutDto answerVoteOutDto = answerVoteMapper.dtoFromAnswerVote(answerVote1);
-        return answerVoteOutDto;
+        return answerVoteMapper.dtoFromAnswerVote(answerVote1);
     }
 }

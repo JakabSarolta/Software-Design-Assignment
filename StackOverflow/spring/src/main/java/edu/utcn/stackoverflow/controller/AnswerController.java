@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -39,7 +40,7 @@ public class AnswerController {
     }
 
     @PostMapping
-    public AnswerOutDto addAnswer(@RequestBody AnswerInDto answerInDto) {
+    public AnswerOutDto addAnswer(@RequestBody @Valid AnswerInDto answerInDto) {
         Answer answer = answerMapper.answerFromDto(answerInDto);
         answer.setAuthor(userService.findByUserName(answerInDto.getAuthor()));
         answer.setQuestion(questionService.getQuestionById(answerInDto.getQuestion()));
@@ -50,7 +51,7 @@ public class AnswerController {
     }
 
     @PutMapping("/{id}")
-    public AnswerOutDto updateAnswer(@PathVariable("id") Long id, @RequestBody AnswerInDto answerInDto) {
+    public AnswerOutDto updateAnswer(@PathVariable("id") Long id, @RequestBody @Valid AnswerInDto answerInDto) {
         Answer answer = answerMapper.answerFromDto(answerInDto);
         answer.setId(id);
         answer.setAuthor(userService.findByUserName(answerInDto.getAuthor()));
@@ -62,7 +63,8 @@ public class AnswerController {
 
     @DeleteMapping("/{id}")
     public void deleteAnswer(@PathVariable("id") Long id) {
-        questionService.getQuestionById(answerService.getAnswerById(id).getQuestion().getId()).getAnswers().remove(answerService.getAnswerById(id));
+        questionService.getQuestionById(answerService.getAnswerById(id).getQuestion().getId())
+                .getAnswers().remove(answerService.getAnswerById(id));
         answerService.deleteAnswer(id);
     }
 }

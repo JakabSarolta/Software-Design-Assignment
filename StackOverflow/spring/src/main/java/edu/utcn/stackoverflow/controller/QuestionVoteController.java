@@ -1,10 +1,8 @@
 package edu.utcn.stackoverflow.controller;
 
-import edu.utcn.stackoverflow.controller.dto.QuestionOutDto;
 import edu.utcn.stackoverflow.controller.dto.QuestionVoteInDto;
 import edu.utcn.stackoverflow.controller.dto.QuestionVoteOutDto;
 import edu.utcn.stackoverflow.controller.mapper.QuestionVoteMapper;
-import edu.utcn.stackoverflow.model.Question;
 import edu.utcn.stackoverflow.model.QuestionVote;
 import edu.utcn.stackoverflow.service.QuestionService;
 import edu.utcn.stackoverflow.service.QuestionVoteService;
@@ -15,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @Slf4j
 @RestController
@@ -30,14 +30,13 @@ public class QuestionVoteController {
     private QuestionVoteMapper questionVoteMapper;
 
     @PostMapping
-    public QuestionVoteOutDto addQuestionVote(@RequestBody QuestionVoteInDto questionVoteInDto) {
+    public QuestionVoteOutDto addQuestionVote(@RequestBody @Valid QuestionVoteInDto questionVoteInDto) {
         QuestionVote questionVote = questionVoteMapper.questionVoteFromDto(questionVoteInDto);
         questionVote.setAuthor(userService.findByUserName(questionVoteInDto.getAuthor()));
         questionVote.setQuestion(questionService.getQuestionById(questionVoteInDto.getQuestion()));
         QuestionVote questionVote1 = questionVoteService.addQuestionVote(questionVote);
         questionVote1.getQuestion().getQuestionVotes().add(questionVote1);
         questionVote1.getAuthor().getQuestionVotes().add(questionVote1);
-        QuestionVoteOutDto questionVoteOutDto = questionVoteMapper.dtoFromQuestionVote(questionVote1);
-        return questionVoteOutDto;
+        return questionVoteMapper.dtoFromQuestionVote(questionVote1);
     }
 }

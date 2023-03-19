@@ -3,7 +3,6 @@ package edu.utcn.stackoverflow.controller.mapper;
 import edu.utcn.stackoverflow.controller.dto.UserInDto;
 import edu.utcn.stackoverflow.controller.dto.UserOutDto;
 import edu.utcn.stackoverflow.model.User;
-import lombok.Data;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

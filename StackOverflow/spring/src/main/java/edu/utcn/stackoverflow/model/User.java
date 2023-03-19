@@ -10,7 +10,7 @@ import java.util.Collection;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "users")
-public class User extends BaseEntity{
+public class User extends BaseEntity {
     private String lastName;
     private String firstName;
     private String userName;

@@ -1,6 +1,5 @@
 package edu.utcn.stackoverflow.service;
 
-import edu.utcn.stackoverflow.controller.NotFoundException;
 import edu.utcn.stackoverflow.dao.UserDao;
 import edu.utcn.stackoverflow.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
