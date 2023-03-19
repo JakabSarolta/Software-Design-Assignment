@@ -30,6 +30,12 @@ public class QuestionController {
     @Autowired
     private TagService tagService;
 
+    @GetMapping("/postman")
+    public Collection<QuestionOutDto> getQuestionsInPostman() {
+        Collection<Question> questions = questionService.getQuestionsStartingFromIndexSortedByDateDesc(-1);
+        return questionMapper.dtosFromQuestions(questions);
+    }
+
     @GetMapping("/{questionId}")
     public QuestionOutDto getQuestionById(@PathVariable("questionId") Long questionId) {
         Question question = questionService.getQuestionById(questionId);

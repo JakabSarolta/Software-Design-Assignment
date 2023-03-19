@@ -200,6 +200,7 @@ router.get('/', (req, res) => {
             data[i].alreadyVoted = alreadyVoted;
             data[i].voteCount = upVotes - downVotes;
         }
+        data.sort((a, b) => b.id - a.id);
         questions = data;
         res.type('.html');
         res.render('questions', {questions, username: req.session.user.userName, ftype: null, fvalue: null});
