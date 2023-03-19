@@ -5,7 +5,6 @@ const router = Router();
 router.get('/update/:questionId/:answerId', (req, res) => {
     const questionId = req.params.questionId;
     const answerId = req.params.answerId;
-    console.log("[GET] Update answer: " + answerId + " for question: " + questionId);
     fetch('http://localhost:8080/answers/' + answerId, {
         method: 'GET'
     })
@@ -29,10 +28,123 @@ router.get('/update/:questionId/:answerId', (req, res) => {
     });
 });
 
+router.post('/upvote/:questionId/:answerId', (req, res) => {
+    const questionId = req.params.questionId;
+    const answerId = req.params.answerId;
+    const user = req.session.user.userName;
+
+    // fetch the question from the server, check if the current session user has already voted, if yes then throw and error, else add the vote
+    fetch('http://localhost:8080/answers/' + answerId, {
+        method: 'GET'
+    })
+    .then(response => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            throw new Error('Server error');
+        }
+    })
+    .then(data => {
+        let alreadyVoted = false;
+        for (let i=0;i<data.answerVotes.length; i++) {
+            if (data.answerVotes[i].author.userName === user) {
+                alreadyVoted = true;
+            }
+        }
+        if (alreadyVoted) {
+            throw new Error('You have already voted');
+        } else {
+            const vote = {
+                answer: answerId,
+                author: user,
+                voteType: "up"
+            }
+            fetch('http://localhost:8080/answervotes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(vote)
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    res.redirect('/questions/' + questionId);
+                } else {
+                    throw new Error('Server error');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                res.send('Error');
+            });
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        res.send('Error');
+    });
+});
+
+router.post('/downvote/:questionId/:answerId', (req, res) => {
+    const questionId = req.params.questionId;
+    const answerId = req.params.answerId;
+    const user = req.session.user.userName;
+
+    // fetch the question from the server, check if the current session user has already voted, if yes then throw and error, else add the vote
+    fetch('http://localhost:8080/answers/' + answerId, {
+        method: 'GET'
+    })
+    .then(response => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            throw new Error('Server error');
+        }
+    })
+    .then(data => {
+        let alreadyVoted = false;
+        for (let i=0;i<data.answerVotes.length; i++) {
+            if (data.answerVotes[i].author.userName === user) {
+                alreadyVoted = true;
+            }
+        }
+        if (alreadyVoted) {
+            throw new Error('You have already voted');
+        } else {
+            const vote = {
+                answer: answerId,
+                author: user,
+                voteType: "down"
+            }
+            fetch('http://localhost:8080/answervotes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(vote)
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    res.redirect('/questions/' + questionId);
+                } else {
+                    throw new Error('Server error');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                res.send('Error');
+            });
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        res.send('Error');
+    });
+});
+
 router.post('/update/:questionId/:answerId', (req, res) => {
     const questionId = req.params.questionId;
     const answerId = req.params.answerId;
-    console.log("Update answer: " + answerId + " for question: " + questionId);
     const answer = {
         author: req.session.user.userName,
         content: req.fields.content,

@@ -12,9 +12,6 @@ router.post('/', (req, res) => {
     const username = req.fields.username;
     const password = req.fields.password;
 
-    console.log(username);
-    console.log(password);
-
     fetch('http://localhost:8080/users/username/' + username, {
         method: 'GET'
     })
@@ -26,7 +23,6 @@ router.post('/', (req, res) => {
         }
     })
     .then(data => {
-        console.log('Success:', data);
         // log in the user, store in cookie, redirect to home page
         if (bcrypt.compareSync(password, data.password)) {
             req.session.user = data;

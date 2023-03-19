@@ -13,6 +13,7 @@ import java.util.Collection;
 public abstract class AnswerMapper {
     @Mapping(target = "question", ignore = true)
     @Mapping(target = "author", ignore = true)
+    @Mapping(target = "answerVotes", ignore = true)
     public abstract Answer answerFromDto(AnswerInDto answerInDto);
 
     public abstract AnswerOutDto dtoFromAnswer(Answer answer);

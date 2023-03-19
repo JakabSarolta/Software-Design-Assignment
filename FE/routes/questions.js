@@ -25,12 +25,37 @@ router.get('/:id', (req, res) => {
         }
     })
     .then(data => {
-        console.log(data);
+        // Convert tags to string
         let tags = '';
         for (let i = 0; i < data.tags.length; i++) {
             tags += data.tags[i].name + ';';
         }
         tags = tags.slice(0, -1);
+
+        // Get upvotes and downvotes and add it to the data object
+        let upvotes = 0;
+        let downvotes = 0;
+        let alreadyVoted = false;
+        for (let i = 0; i < data.answers.length; i++) {
+            upvotes = 0;
+            downvotes = 0;
+            alreadyVoted = false;
+            for (let j = 0; j < data.answers[i].answerVotes.length; j++) {
+                if (data.answers[i].answerVotes[j].author.userName === req.session.user.userName) {
+                    alreadyVoted = true;
+                }
+                if (data.answers[i].answerVotes[j].voteType === "up") {
+                    upvotes += 1;
+                } else {
+                    downvotes += 1;
+                }
+            }
+            data.answers[i].upvotes = upvotes;
+            data.answers[i].downvotes = downvotes;
+            data.answers[i].alreadyVoted = alreadyVoted;
+            data.answers[i].voteCount = upvotes - downvotes;
+        }
+        data.answers.sort((a, b) => b.voteCount - a.voteCount);
         question = data;
         answers = data.answers;
         res.type('.html');
@@ -110,10 +135,15 @@ router.post('/filter', (req, res) => {
     .then(data => {
         let upVotes = 0;
         let downVotes = 0;
+        let alreadyVoted = false;
         for (let i=0;i<data.length; i++) {
             upVotes = 0;
             downVotes = 0;
+            alreadyVoted = false;
             for (let j=0;j<data[i].questionVotes.length; j++) {
+                if (data[i].questionVotes[j].author.userName === req.session.user.userName) {
+                    alreadyVoted = true;
+                }
                 if (data[i].questionVotes[j].voteType === "up") {
                     upVotes++;
                 } else {
@@ -122,10 +152,12 @@ router.post('/filter', (req, res) => {
             }
             data[i].upVotes = upVotes;
             data[i].downVotes = downVotes;
+            data[i].alreadyVoted = alreadyVoted;
+            data[i].voteCount = upVotes - downVotes;
         }
-
+        const questions = data;
         res.type('.html');
-        res.render('questions', {questions: data, username: req.session.user.userName, ftype, fvalue});
+        res.render('questions', {questions, username: req.session.user.userName, ftype, fvalue});
     })
     .catch((error) => {
         console.error('Error:', error);
@@ -148,10 +180,15 @@ router.get('/', (req, res) => {
     .then(data => {
         let upVotes = 0;
         let downVotes = 0;
+        let alreadyVoted = false;
         for (let i=0;i<data.length; i++) {
             upVotes = 0;
             downVotes = 0;
+            alreadyVoted = false;
             for (let j=0;j<data[i].questionVotes.length; j++) {
+                if (data[i].questionVotes[j].author.userName === req.session.user.userName) {
+                    alreadyVoted = true;
+                }
                 if (data[i].questionVotes[j].voteType === "up") {
                     upVotes++;
                 } else {
@@ -160,6 +197,8 @@ router.get('/', (req, res) => {
             }
             data[i].upVotes = upVotes;
             data[i].downVotes = downVotes;
+            data[i].alreadyVoted = alreadyVoted;
+            data[i].voteCount = upVotes - downVotes;
         }
         questions = data;
         res.type('.html');
@@ -189,7 +228,7 @@ router.post('/upvote/:id', (req, res) => {
     .then(data => {
         let alreadyVoted = false;
         for (let i=0;i<data.questionVotes.length; i++) {
-            if (data.questionVotes[i].user.userName === user) {
+            if (data.questionVotes[i].author.userName === user) {
                 alreadyVoted = true;
             }
         }
@@ -245,7 +284,7 @@ router.post('/downvote/:id', (req, res) => {
     .then(data => {
         let alreadyVoted = false;
         for (let i=0;i<data.questionVotes.length; i++) {
-            if (data.questionVotes[i].user.userName === user) {
+            if (data.questionVotes[i].author.userName === user) {
                 alreadyVoted = true;
             }
         }

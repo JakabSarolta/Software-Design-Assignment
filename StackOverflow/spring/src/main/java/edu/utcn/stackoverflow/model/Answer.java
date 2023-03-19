@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Collection;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -19,7 +20,11 @@ public class Answer extends BaseEntity {
     private String content;
     private String picture;
     private Timestamp date;
+
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     private Question question;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "answer")
+    private Collection<AnswerVote> answerVotes;
 }

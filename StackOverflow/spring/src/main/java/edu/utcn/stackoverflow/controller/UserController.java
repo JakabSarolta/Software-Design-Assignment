@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
@@ -71,6 +72,10 @@ public class UserController {
             throw new BadRequestException();
         }
 
+        user.setQuestionVotes(new ArrayList<>());
+        user.setAnswerVotes(new ArrayList<>());
+        user.setQuestions(new ArrayList<>());
+
         User user2 = userService.createUser(user);
         UserOutDto userOutDto = userMapper.dtoFromUser(user2);
         return userOutDto;
@@ -84,8 +89,9 @@ public class UserController {
         User user = userMapper.userFromDto(userInDto);
         user.setId(id);
         User userToBeReplaced = userService.getUserById(id);
-        Collection<Question> questions = userToBeReplaced.getQuestions();
-        user.setQuestions(questions);
+        user.setQuestionVotes(userToBeReplaced.getQuestionVotes());
+        user.setAnswerVotes(userToBeReplaced.getAnswerVotes());
+        user.setQuestions(userToBeReplaced.getQuestions());
         User user2 = userService.updateUser(user);
         return userMapper.dtoFromUser(user2);
     }

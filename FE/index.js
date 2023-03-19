@@ -27,10 +27,10 @@ app.use('/answers', answers);
 // Temporary endpoints
 app.get('/logout', (req, res) => {
     req.session.user = null;
-    res.send('OK');
+    res.redirect('/login');
 });
 app.get('/getCookie', (req, res) => {
-    res.send(req.session.user); 
+    res.send(req.session.user);
 });
 
 app.use(express.static(staticDir));

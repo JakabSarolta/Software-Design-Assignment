@@ -9,7 +9,7 @@
     <link rel='stylesheet' type='text/css' media='screen' href='/answers.css'>
 </head>
 <body>
-    <div>
+    <div class="content">
         <h1><%= question.title %></h1>
         <p><%= question.content %></p>
         <p>Tags: <%= tags %></p>
@@ -27,31 +27,43 @@
                 <button type="submit" class="register-button btn btn-info text-info-subtle bg-info-subtle">Delete question</button>
             </form>
         <% } %>
-
-        <form method="POST" action="/answers/create/<%= question.id %>">
-            <div class="mb-3">
-                <label for="content" class="form-label">Content</label>
-                <input required type="text" class="form-control bg-info-subtle" id="content" name="content">
-            </div>
-            <button type="submit" class="register-button btn btn-info text-info-subtle bg-info-subtle">Answer</button>
-        </form>
-
-        <% for(i = 0; i < question.answers.length; i++) { %>
-            <div class="answer">
-                <p><%= question.answers[i].content %></p>
-                <p>Answered by: <%= question.answers[i].author.userName %></p>
-                <p>Answered on: <%= question.answers[i].date %></p>
-                <% if (username === question.answers[i].author.userName) { %>
-                    <a href="/answers/update/<%= question.id %>/<%= question.answers[i].id %>">
-                        <button type="button" class="register-button btn btn-info text-info-subtle bg-info-subtle">Update answer</button>
-                    </a>
-
-                    <form method="POST" action="/answers/delete/<%= question.id %>/<%= question.answers[i].id %>">
-                        <button type="submit" class="register-button btn btn-info text-info-subtle bg-info-subtle">Delete answer</button>
-                    </form>
-                <% } %>
-            </div>
-        <% } %>
     </div>
+
+    <form class="newAnswerForm" method="POST" action="/answers/create/<%= question.id %>">
+        <div class="mb-3">
+            <label for="content" class="form-label">Content</label>
+            <input required type="text" class="form-control bg-info-subtle" id="content" name="content">
+        </div>
+        <button type="submit" class="register-button btn btn-info text-info-subtle bg-info-subtle">Answer</button>
+    </form>
+
+    <% for(i = 0; i < question.answers.length; i++) { %>
+        <div class="answer">
+            <p><%= question.answers[i].content %></p>
+            <p>Answered by: <%= question.answers[i].author.userName %></p>
+            <p>Answered on: <%= question.answers[i].date %></p>
+            <p>Upvotes: <%= question.answers[i].upvotes %></p>
+            <p>Downvotes: <%= question.answers[i].downvotes %></p>
+            <p>Vote count: <%= question.answers[i].voteCount %></p>
+
+            <% if ((question.answers[i].author.userName != username) && !question.answers[i].alreadyVoted) { %>
+                <form method="POST" action="/answers/upvote/<%= question.id %>/<%= question.answers[i].id %>">
+                    <button type="submit" class="btn btn-success bottom-btn">Like</button>
+                </form>
+                <form method="POST" action="/answers/downvote/<%= question.id %>/<%= question.answers[i].id %>">
+                    <button type="submit" class="btn btn-danger bottom-btn">Dislike</button>
+                </form>
+            <% } %>
+            <% if (username === question.answers[i].author.userName) { %>
+                <a href="/answers/update/<%= question.id %>/<%= question.answers[i].id %>">
+                    <button type="button" class="register-button btn btn-info text-info-subtle bg-info-subtle">Update answer</button>
+                </a>
+
+                <form method="POST" action="/answers/delete/<%= question.id %>/<%= question.answers[i].id %>">
+                    <button type="submit" class="register-button btn btn-info text-info-subtle bg-info-subtle">Delete answer</button>
+                </form>
+            <% } %>
+        </div>
+    <% } %>
 </body>
 </html>

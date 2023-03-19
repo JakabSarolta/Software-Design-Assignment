@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Slf4j
@@ -42,6 +43,7 @@ public class AnswerController {
         Answer answer = answerMapper.answerFromDto(answerInDto);
         answer.setAuthor(userService.findByUserName(answerInDto.getAuthor()));
         answer.setQuestion(questionService.getQuestionById(answerInDto.getQuestion()));
+        answer.setAnswerVotes(new ArrayList<>());
         questionService.getQuestionById(answerInDto.getQuestion()).getAnswers().add(answer);
         Answer answer2 = answerService.createAnswer(answer);
         return answerMapper.dtoFromAnswer(answer2);
@@ -53,6 +55,7 @@ public class AnswerController {
         answer.setId(id);
         answer.setAuthor(userService.findByUserName(answerInDto.getAuthor()));
         answer.setQuestion(questionService.getQuestionById(answerInDto.getQuestion()));
+        answer.setAnswerVotes(answerService.getAnswerById(id).getAnswerVotes());
         Answer answer2 = answerService.createAnswer(answer);
         return answerMapper.dtoFromAnswer(answer2);
     }

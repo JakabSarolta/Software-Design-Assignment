@@ -36,7 +36,6 @@ router.post('/', (req, res) => {
         body: JSON.stringify(dict),
     })
     .then(response => {
-        console.log(response.status);
         if (response.status === 200) {
             return response.json();
         } else {
@@ -44,7 +43,6 @@ router.post('/', (req, res) => {
         }
     })
     .then(data => {
-        console.log('Success:', data);
         res.redirect('/login');
     })
     .catch((error) => {
