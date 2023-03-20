@@ -1,8 +1,10 @@
 package edu.utcn.stackoverflow.controller.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class UserOutDto {
     private Long id;
     private String lastName;

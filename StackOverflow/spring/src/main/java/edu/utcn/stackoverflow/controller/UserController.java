@@ -38,6 +38,9 @@ public class UserController {
     @GetMapping("/{id}")
     public UserOutDto getUserById(@PathVariable("id") Long id) {
         User user = userService.getUserById(id);
+        if (user == null) {
+            throw new NotFoundException();
+        }
         return userMapper.dtoFromUser(user);
     }
 

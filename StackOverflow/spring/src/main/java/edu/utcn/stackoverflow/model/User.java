@@ -10,6 +10,8 @@ import java.util.Collection;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "users")
+@AllArgsConstructor
+@NoArgsConstructor
 public class User extends BaseEntity {
     private String lastName;
     private String firstName;
