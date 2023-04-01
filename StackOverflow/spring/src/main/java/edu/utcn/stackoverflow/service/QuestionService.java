@@ -5,6 +5,7 @@ import edu.utcn.stackoverflow.dao.jpa.JpaQuestionDao;
 import edu.utcn.stackoverflow.model.Question;
 import edu.utcn.stackoverflow.model.Tag;
 import edu.utcn.stackoverflow.model.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 
 @Service
+@Slf4j
 public class QuestionService {
     @Autowired
     private QuestionDao questionDao;

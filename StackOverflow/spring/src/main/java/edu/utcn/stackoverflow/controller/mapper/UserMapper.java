@@ -10,7 +10,7 @@ import java.util.Collection;
 
 @Mapper(componentModel = "spring")
 public abstract class UserMapper {
-    @Mapping(target = "questions", ignore = true)
+    // @Mapping(target = "questions", ignore = true)
     @Mapping(target = "questionVotes", ignore = true)
     @Mapping(target = "answerVotes", ignore = true)
     public abstract User userFromDto(UserInDto userInDto);

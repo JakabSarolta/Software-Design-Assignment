@@ -3,6 +3,14 @@ import bcrypt from 'bcrypt';
 
 const router = Router();
 
+router.use('/*', (req, res, next) => {
+    if (req.session.user) {
+        res.redirect('/questions');
+    } else {
+        next();
+    }
+});
+
 router.get('/', (req, res) => {
     res.type('.html');
     res.render('login');

@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import path from 'path';
 
 const router = Router();
 
@@ -144,11 +145,25 @@ router.post('/downvote/:questionId/:answerId', (req, res) => {
 
 router.post('/update/:questionId/:answerId', (req, res) => {
     const questionId = req.params.questionId;
+
+    let pic = req.files.picture;
+    console.log(pic);
+    if (pic === undefined || pic === null || pic === '') {
+        pic = false;
+    } else {
+        pic = true;
+    }
+
+    if(pic)
+        pic = "/pictures/" + path.basename(req.files.picture.path);
+    else
+        pic = "null";
+
     const answerId = req.params.answerId;
     const answer = {
         author: req.session.user.userName,
         content: req.fields.content,
-        picture: "heyyyhoooo",
+        picture: pic,
         date: new Date(),
         question: questionId
     }
@@ -173,10 +188,24 @@ router.post('/update/:questionId/:answerId', (req, res) => {
 
 router.post('/create/:questionId', (req, res) => {
     const questionId = req.params.questionId;
+
+    let pic = req.files.picture;
+    console.log(pic);
+    if (pic === undefined || pic === null || pic === '') {
+        pic = false;
+    } else {
+        pic = true;
+    }
+
+    if(pic)
+        pic = "/pictures/" + path.basename(req.files.picture.path);
+    else
+        pic = "null";
+
     const answer = {
         author: req.session.user.userName,
         content: req.fields.content,
-        picture: "heyyyhoooo",
+        picture: pic,
         date: new Date(),
         question: questionId
     }

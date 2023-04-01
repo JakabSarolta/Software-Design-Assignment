@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import path from 'path';
 
 const router = Router();
 
@@ -325,17 +326,34 @@ router.post('/downvote/:id', (req, res) => {
             
 router.post('/update/:id', (req, res) => {
     const id = req.params.id;
+
+    let pic = req.files.picture;
+
+    console.log(pic);
+
+    if (pic === undefined || pic === null || pic === '')
+        pic = false;
+    else
+        pic = true;
+
+    if (pic) {
+        pic = "/pictures/" + path.basename(req.files.picture.path);
+    } else {
+        pic = "null";
+    }
+
     let tags = req.fields.tags;
     if (tags[tags.length - 1] === ';') {
         tags = tags.slice(0, -1);
     }
     tags = tags.split(';');
+    console.log("PIC:" + pic)
     const question = {
         title: req.fields.title,
         author: req.session.user.userName,
         content: req.fields.content,
         date: new Date(),
-        picture: "ioasudbcia",
+        picture: pic,
         tags
     }
     fetch('http://localhost:8080/questions/' + id, {
@@ -375,6 +393,7 @@ router.post('/delete/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
+    let picture;
     const title = req.fields.title;
     const content = req.fields.content;
     let tags = req.fields.tags;
@@ -382,7 +401,24 @@ router.post('/', (req, res) => {
         tags = tags.slice(0, -1);
     }
     tags = tags.split(';');
-    const picture = "ioasudbcia";
+
+    console.log(req.files.picture);
+
+    let test_picture;
+    if (req.files.picture === undefined || req.files.picture === null || req.files.picture === "") {
+        test_picture = false;
+    } else {
+        test_picture = true;
+    }
+
+    console.log(test_picture);
+
+    if (test_picture) {
+        picture = "/pictures/" + path.basename(req.files.picture.path); //basename returns the last part of a path
+    } else {
+        picture = "null";
+    }
+
     const author = req.session.user.userName;
     const date = new Date();
 

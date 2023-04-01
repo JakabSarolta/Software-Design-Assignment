@@ -7,86 +7,82 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel='stylesheet' type='text/css' media='screen' href='/questions.css'>
-
+    
 </head>
 <body>
-    <div class="forms">
-        <form class="submitForm" method="POST" action="/questions">
-            <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input required type="text" class="form-control bg-info-subtle" id="title" name="title" placeholder="Title">
-            </div>
-            <div class="mb-3">
-                <label for="content" class="form-label">Content</label>
-                <input required type="text" class="form-control bg-info-subtle" id="content" name="content" placeholder="Content">
-            </div>
-            <div class="mb-3">
-                <label for="tags" class="form-label">Tags</label>
-                <input required type="text" class="form-control bg-info-subtle" id="tags" name="tags" placeholder="tag1;tag2;tag3...">
-            </div>
-            <button type="submit" class="submit-button btn btn-info text-info-subtle bg-info-subtle">Add question</button>
-        </form>
+    <%- include('partials/navbar') %>
+    
+    <div class="content">
+        <div class="left col-9">
+            <h1 class="left-header">All questions</h1>
+            <% for(let i = 0; i < questions.length; i++) { %>
+                <div class="divider"></div>
+                <div class="question col-12">
+                    <div class="question-left col-2">
+                        <p><%= questions[i].voteCount %> votecount</p>
+                        <p><%= questions[i].answers.length %> answers</p>
+                    </div>
+                    <div class="question-right col-10">
+                        <p><%= questions[i].title %></p>
+                        <p><%= questions[i].content %></p>
 
-        <form class="submitForm" method="POST" action="/questions/filter">
-            <div class="mb-3">
-                <label for="filtertype" class="form-label">Filter type</label>
-                <select class="form-select" aria-label="Default select example" id="filtertype" name="filtertype">
-                    <option <% if (ftype==='tag' || ftype===null) { %> selected <% } %> value="tag">Tag</option>
-                    <option <% if (ftype==='keyword') { %> selected <% } %> value="keyword">Keyword</option>
-                    <option <% if (ftype==='username') { %> selected <% } %> value="username">Username</option>
-                    <option <% if (ftype==='own') { %> selected <% } %> value="own">Own questions</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="filtervalue" class="form-label">Filter value</label>
-                <input type="text" class="form-control bg-info-subtle" id="filtervalue" name="filtervalue" placeholder="Filter value" value="<%= fvalue %>">
-            </div>
-            <button type="submit" class="submit-button btn btn-info text-info-subtle bg-info-subtle">Filter questions</button>
-            <% if (ftype !== null) { %>
-                <a href="/questions">
-                    <button type="button" class="submit-button btn btn-info text-info-subtle bg-info-subtle">Reset filter</button>
-                </a>
+                        <div class="tags">
+                            <% for(let j = 0; j < questions[i].tags.length; j++) { %>
+                                <div class="question-tag"><%= questions[i].tags[j].name %></div>
+                            <% } %>
+                        </div>
+
+                        <div class="buttons">
+                            <a href="/questions/<%= questions[i].id %>">
+                                <button type="button" class="btn btn-info bottom-btn question-button">View</button>
+                            </a>
+                            <% if ((questions[i].author.userName != username) && (!questions[i].alreadyVoted)){ %>
+                                <form method="POST" action="/questions/upvote/<%= questions[i].id %>">
+                                    <button type="submit" class="btn btn-success bottom-btn question-button">Like</button>
+                                </form>
+                                <form method="POST" action="/questions/downvote/<%= questions[i].id %>">
+                                    <button type="submit" class="btn btn-danger bottom-btn question-button">Dislike</button>
+                                </form>
+                            <% } %>
+                            <% if(questions[i].author.userName === username){ %>
+                                <form method="GET" action="/questions/update/<%= questions[i].id %>">
+                                    <button type="submit" class="btn btn-warning bottom-btn question-button">Edit</button>
+                                </form>
+                                <form method="POST" action="/questions/delete/<%= questions[i].id %>">
+                                    <button type="submit" class="btn btn-danger bottom-btn question-button">Delete</button>
+                                </form>
+                            <% } %>
+                        </div>
+                        <div class="question-author-date">
+                            <p class="question-date"><%= questions[i].date %></p>
+                            <h2 class="question-author"><%= questions[i].author.userName %></h2>
+                        </div>
+                    </div>
+                    
+                </div>
             <% } %>
-        </form>
-    </div>
-
-    <% for(let i = 0; i < questions.length; i++) { %>
-        <div class="question">
-            <h2><%= questions[i].author.userName %></h2>
-            <p><%= questions[i].title %></p>
-            <p><%= questions[i].content %></p>
-            <p><%= questions[i].date %></p>
-            <p>Upvotes: <%= questions[i].upVotes %></p>
-            <p>Downvotes: <%= questions[i].downVotes %></p>
-            <p>Vote count: <%= questions[i].voteCount %></p>
-
-            <div class="tags">
-                <% for(let j = 0; j < questions[i].tags.length; j++) { %>
-                    <p><%= questions[i].tags[j].name %></p>
-                <% } %>
-            </div>
-            <div class="buttons">
-                <a href="/questions/<%= questions[i].id %>">
-                    <button type="button" class="btn btn-info bottom-btn">View</button>
-                </a>
-                <% if ((questions[i].author.userName != username) && (!questions[i].alreadyVoted)){ %>
-                    <form method="POST" action="/questions/upvote/<%= questions[i].id %>">
-                        <button type="submit" class="btn btn-success bottom-btn">Like</button>
-                    </form>
-                    <form method="POST" action="/questions/downvote/<%= questions[i].id %>">
-                        <button type="submit" class="btn btn-danger bottom-btn">Dislike</button>
-                    </form>
-                <% } %>
-                <% if(questions[i].author.userName === username){ %>
-                    <form method="GET" action="/questions/update/<%= questions[i].id %>">
-                        <button type="submit" class="btn btn-warning bottom-btn">Edit</button>
-                    </form>
-                    <form method="POST" action="/questions/delete/<%= questions[i].id %>">
-                        <button type="submit" class="btn btn-danger bottom-btn">Delete</button>
-                    </form>
-                <% } %>
-            </div>
         </div>
-    <% } %>
+        <div class="right col-3">
+            <form class="submitForm" method="POST" action="/questions" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input required type="text" class="form-control bg-info-subtle" id="title" name="title" placeholder="Title">
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">Content</label>
+                    <input required type="text" class="form-control bg-info-subtle" id="content" name="content" placeholder="Content">
+                </div>
+                <div class="mb-3">
+                    <label for="tags" class="form-label">Tags</label>
+                    <input required type="text" class="form-control bg-info-subtle" id="tags" name="tags" placeholder="tag1;tag2;tag3...">
+                </div>
+                <div class="mb-3">
+                    <label for="picture" class="form-label">Picture</label>
+                    <input type="file" class="form-control bg-info-subtle" id="picture" name="picture">
+                </div>
+                <button type="submit" class="submit-button btn btn-info text-info-subtle bg-info-subtle">Add question</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

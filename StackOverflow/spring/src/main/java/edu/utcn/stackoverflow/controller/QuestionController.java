@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 @Slf4j
 @RestController
@@ -92,15 +93,18 @@ public class QuestionController {
     }
 
     @PutMapping("/{questionId}")
-    public Question updateQuestion(@PathVariable("questionId") Long questionId,
+    public QuestionOutDto updateQuestion(@PathVariable("questionId") Long questionId,
                                    @RequestBody @Valid QuestionInDto questionInDto) {
-        Question question = questionService.getQuestionById(questionId);
-        question.setTitle(questionInDto.getTitle()); //title
-        question.setContent(questionInDto.getContent()); //content
-        question.setPicture(questionInDto.getPicture()); //picture
-        question.setAnswers(questionService.getQuestionById(questionId).getAnswers()); //answers
-        question.setQuestionVotes(questionService.getQuestionById(questionId).getQuestionVotes()); //questionVotes
-        question.setTags(new ArrayList<>()); //tags
+        Question question = questionMapper.questionFromDto(questionInDto);
+        question.setId(questionId);
+        if (Objects.equals(question.getPicture(), "null")) {
+            question.setPicture(questionService.getQuestionById(questionId).getPicture());
+        }
+        question.setAuthor(questionService.getQuestionById(questionId).getAuthor());
+        question.setAnswers(questionService.getQuestionById(questionId).getAnswers());
+        question.setQuestionVotes(questionService.getQuestionById(questionId).getQuestionVotes());
+        // check if tags exist, if not create them
+        Collection<Tag> tags = new ArrayList<>();
         for (String tagName : questionInDto.getTags()) {
             Tag tag = tagService.findByName(tagName);
             if (tag == null) {
@@ -108,9 +112,11 @@ public class QuestionController {
                 tag.setName(tagName);
                 tag = tagService.createTag(tag);
             }
-            question.getTags().add(tag);
+            tags.add(tag);
         }
-        return questionService.updateQuestion(question);
+        question.setTags(tags);
+        Question question2 = questionService.createQuestion(question);
+        return questionMapper.dtoFromQuestion(question2);
     }
 
     @DeleteMapping("/{questionId}")

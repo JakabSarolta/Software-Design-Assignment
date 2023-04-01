@@ -1,0 +1,62 @@
+<link rel="stylesheet" type="text/css" media="screen" href="/navbar.css">
+<nav>
+    <div class="nav-logo">
+        <a href="/questions">
+            <img src="/assets/images/stackoverflow.png" alt="Logo">
+        </a>
+    </div>
+
+    <div class="nav-filter-questions col-3">
+        <form class="nav-form" method="POST" action="/questions/filter">
+            <div class="mb-3 col-3">
+                <select class="form-select nav-select" aria-label="Select type" id="filtertype" name="filtertype">
+                    <option <% if (ftype==='tag' || ftype===null) { %> selected <% } %> value="tag">Tag</option>
+                    <option <% if (ftype==='keyword') { %> selected <% } %> value="keyword">Keyword</option>
+                    <option <% if (ftype==='username') { %> selected <% } %> value="username">Username</option>
+                    <option <% if (ftype==='own') { %> selected <% } %> value="own">Own questions</option>
+                </select>
+            </div>
+            <div class="mb-3 col-9">
+                <input type="text" class="form-control nav-control bg-info-subtle" id="filtervalue" name="filtervalue" placeholder="Filter value" value="<%= fvalue %>">
+            </div>
+        </form>
+    </div>
+
+    <div class="nav-user">
+        <div class="nav-user-text">
+            <% if (username != null) { %>
+                <%= username %>
+            <% } else { %>
+                Guest
+            <% } %>
+        </div>
+        <a href="/logout">
+            <button type="button" class="submit-button btn btn-info text-info-subtle bg-info-subtle">Logout</button>
+        </a>
+    </div>
+
+</nav>
+
+<!-- 
+<form class="submitForm" method="POST" action="/questions/filter">
+    <div class="mb-3">
+        <label for="filtertype" class="form-label">Filter type</label>
+        <select class="form-select" aria-label="Default select example" id="filtertype" name="filtertype">
+            <option <% if (ftype==='tag' || ftype===null) { %> selected <% } %> value="tag">Tag</option>
+            <option <% if (ftype==='keyword') { %> selected <% } %> value="keyword">Keyword</option>
+            <option <% if (ftype==='username') { %> selected <% } %> value="username">Username</option>
+            <option <% if (ftype==='own') { %> selected <% } %> value="own">Own questions</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="filtervalue" class="form-label">Filter value</label>
+        <input type="text" class="form-control bg-info-subtle" id="filtervalue" name="filtervalue" placeholder="Filter value" value="<%= fvalue %>">
+    </div>
+    <button type="submit" class="submit-button btn btn-info text-info-subtle bg-info-subtle">Filter questions</button>
+    <% if (ftype !== null) { %>
+        <a href="/questions">
+            <button type="button" class="submit-button btn btn-info text-info-subtle bg-info-subtle">Reset filter</button>
+        </a>
+    <% } %>
+</form>
+</div> -->

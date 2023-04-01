@@ -66,7 +66,7 @@ public class UserController {
 
         user.setQuestionVotes(new ArrayList<>());
         user.setAnswerVotes(new ArrayList<>());
-        user.setQuestions(new ArrayList<>());
+        // user.setQuestions(new ArrayList<>());
 
         User user2 = userService.createUser(user);
         return userMapper.dtoFromUser(user2);
@@ -82,7 +82,7 @@ public class UserController {
         User userToBeReplaced = userService.getUserById(id);
         user.setQuestionVotes(userToBeReplaced.getQuestionVotes());
         user.setAnswerVotes(userToBeReplaced.getAnswerVotes());
-        user.setQuestions(userToBeReplaced.getQuestions());
+        // user.setQuestions(userToBeReplaced.getQuestions());
         User user2 = userService.updateUser(user);
         return userMapper.dtoFromUser(user2);
     }

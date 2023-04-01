@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 @Slf4j
 @RestController
@@ -54,6 +55,9 @@ public class AnswerController {
     public AnswerOutDto updateAnswer(@PathVariable("id") Long id, @RequestBody @Valid AnswerInDto answerInDto) {
         Answer answer = answerMapper.answerFromDto(answerInDto);
         answer.setId(id);
+        if (Objects.equals(answer.getPicture(), "null")) {
+            answer.setPicture(answerService.getAnswerById(id).getPicture());
+        }
         answer.setAuthor(userService.findByUserName(answerInDto.getAuthor()));
         answer.setQuestion(questionService.getQuestionById(answerInDto.getQuestion()));
         answer.setAnswerVotes(answerService.getAnswerById(id).getAnswerVotes());

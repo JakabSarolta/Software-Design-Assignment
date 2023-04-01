@@ -9,7 +9,7 @@
     <link rel='stylesheet' type='text/css' media='screen' href='/updateQuestion.css'>
 </head>
 <body>
-    <form class="submitForm" method="POST" action="/questions/update/<%= question.id %>">
+    <form class="submitForm" enctype="multipart/form-data" method="POST" action="/questions/update/<%= question.id %>">
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
             <input required type="text" class="form-control bg-info-subtle" id="title" name="title" placeholder="<%= question.title %>">
@@ -21,6 +21,10 @@
         <div class="mb-3">
             <label for="tags" class="form-label">Tags</label>
             <input required type="text" class="form-control bg-info-subtle" id="tags" name="tags" placeholder="<%= tags %>">
+        </div>
+        <div class="mb-3">
+            <label for="picture" class="form-label">Picture</label>
+            <input type="file" class="form-control bg-info-subtle" id="picture" name="picture">
         </div>
         
         <div id="buttons">

@@ -16,6 +16,9 @@
         <p>Asked by: <%= username %></p>
         <p>Asked on: <%= question.date %></p>
         <p>Answers: <%= answers.length %></p>
+        <% if (question.picture != "null"){ %>
+            <img src="<%= question.picture %>" alt="Question picture">
+        <% } %>
         <a href="/questions">
             <button type="button" class="register-button btn btn-info text-info-subtle bg-info-subtle">Back to questions</button>
         </a>
@@ -29,10 +32,14 @@
         <% } %>
     </div>
 
-    <form class="newAnswerForm" method="POST" action="/answers/create/<%= question.id %>">
+    <form class="newAnswerForm" enctype="multipart/form-data" method="POST" action="/answers/create/<%= question.id %>">
         <div class="mb-3">
             <label for="content" class="form-label">Content</label>
             <input required type="text" class="form-control bg-info-subtle" id="content" name="content">
+        </div>
+        <div class="mb-3">
+            <label for="picture" class="form-label">Picture</label>
+            <input type="file" class="form-control bg-info-subtle" id="picture" name="picture">
         </div>
         <button type="submit" class="register-button btn btn-info text-info-subtle bg-info-subtle">Answer</button>
     </form>
@@ -45,6 +52,10 @@
             <p>Upvotes: <%= question.answers[i].upvotes %></p>
             <p>Downvotes: <%= question.answers[i].downvotes %></p>
             <p>Vote count: <%= question.answers[i].voteCount %></p>
+
+            <% if (question.answers[i].picture != "null"){ %>
+                <img src="<%= question.answers[i].picture %>" alt="Answer picture">
+            <% } %>
 
             <% if ((question.answers[i].author.userName != username) && !question.answers[i].alreadyVoted) { %>
                 <form method="POST" action="/answers/upvote/<%= question.id %>/<%= question.answers[i].id %>">

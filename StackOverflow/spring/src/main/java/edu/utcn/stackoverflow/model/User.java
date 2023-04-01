@@ -22,8 +22,8 @@ public class User extends BaseEntity {
     private Integer role;
     //0 for user, 1 for moderator
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "author")
-    private Collection<Question> questions;
+    // @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "author")
+    // private Collection<Question> questions;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "author")
     private Collection<QuestionVote> questionVotes;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "author")
