@@ -45,6 +45,12 @@
 .tags {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+}
+
+.tags-tags {
+    display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
 }
 
@@ -66,6 +72,12 @@
 }
 
 .buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.buttons-buttons {
     display: flex;
     flex-direction: row;
     margin-top: 10px;
