@@ -56,17 +56,84 @@ router.get('/:id', (req, res) => {
             data.answers[i].alreadyVoted = alreadyVoted;
             data.answers[i].voteCount = upvotes - downvotes;
         }
+
+        // Calculate votecount of question and check if session user already voted
+        upvotes = 0;
+        downvotes = 0;
+        alreadyVoted = false;
+        for (let i = 0; i < data.questionVotes.length; i++) {
+            if (data.questionVotes[i].author.userName === req.session.user.userName) {
+                alreadyVoted = true;
+            }
+            if (data.questionVotes[i].voteType === "up") {
+                upvotes += 1;
+            } else {
+                downvotes += 1;
+            }
+        }
+        data.upvotes = upvotes;
+        data.downvotes = downvotes;
+        data.alreadyVoted = alreadyVoted;
+        data.voteCount = upvotes - downvotes;
+
         data.answers.sort((a, b) => b.voteCount - a.voteCount);
         question = data;
+        console.log(data.author);
         answers = data.answers;
         res.type('.html');
-        res.render('answers', {question, answers, tags, username: req.session.user.userName});
+        res.render('answers', {question, answers, tags, username: req.session.user.userName, ftype: null, fvalue: null});
     })
     .catch((error) => {
-        res.send('Error: ' + error);
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
     });
 });
-            
+
+router.get('/tag/:tag', (req, res) => {
+    const tag = req.params.tag;
+
+    fetch('http://localhost:8080/questions/filter/tag/' + tag, {
+        method: 'GET'
+    })
+    .then(response => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            throw new Error('Server error');
+        }
+    })
+    .then(data => {
+        let upVotes = 0;
+        let downVotes = 0;
+        let alreadyVoted = false;
+        for (let i=0;i<data.length; i++) {
+            upVotes = 0;
+            downVotes = 0;
+            alreadyVoted = false;
+            for (let j=0;j<data[i].questionVotes.length; j++) {
+                if (data[i].questionVotes[j].author.userName === req.session.user.userName) {
+                    alreadyVoted = true;
+                }
+                if (data[i].questionVotes[j].voteType === "up") {
+                    upVotes++;
+                } else {
+                    downVotes++;
+                }
+            }
+            data[i].upVotes = upVotes;
+            data[i].downVotes = downVotes;
+            data[i].alreadyVoted = alreadyVoted;
+            data[i].voteCount = upVotes - downVotes;
+        }
+        data.sort((a, b) => b.id - a.id);
+        const questions = data;
+        res.type('.html');
+        res.render('questions', {questions, username: req.session.user.userName, ftype: "tag", fvalue: tag});
+    })
+    .catch((error) => {
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
+    });
+});
+
 router.get('/update/:id', (req, res) => {
     const id = req.params.id;
     fetch('http://localhost:8080/questions/' + id, {
@@ -93,7 +160,7 @@ router.get('/update/:id', (req, res) => {
         }
     })
     .catch((error) => {
-        res.send('Error: ' + error);
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
     });
 });
 
@@ -156,13 +223,14 @@ router.post('/filter', (req, res) => {
             data[i].alreadyVoted = alreadyVoted;
             data[i].voteCount = upVotes - downVotes;
         }
+        data.sort((a, b) => b.id - a.id);
         const questions = data;
         res.type('.html');
         res.render('questions', {questions, username: req.session.user.userName, ftype, fvalue});
     })
     .catch((error) => {
         console.error('Error:', error);
-        res.send('Error');
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
     });
 });
 
@@ -208,7 +276,121 @@ router.get('/', (req, res) => {
     })
     .catch((error) => {
         console.error('Error:', error);
-        res.send('Error');
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
+    });
+});
+
+router.post('/:qid/upvote/:id', (req, res) => {
+    const qid = req.params.qid;
+    const id = req.params.id;
+    const user = req.session.user.userName;
+
+    // fetch the question from the server, check if the current session user has already voted, if yes then throw and error, else add the vote
+    fetch('http://localhost:8080/questions/' + id, {
+        method: 'GET'
+    })
+    .then(response => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            throw new Error('Server error');
+        }
+    })
+    .then(data => {
+        let alreadyVoted = false;
+        for (let i=0;i<data.questionVotes.length; i++) {
+            if (data.questionVotes[i].author.userName === user) {
+                alreadyVoted = true;
+            }
+        }
+        if (alreadyVoted) {
+            throw new Error('You have already voted');
+        } else {
+            const vote = {
+                question: id,
+                author: user,
+                voteType: "up"
+            }
+            fetch('http://localhost:8080/questionvotes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(vote)
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    res.redirect('/questions/' + qid);
+                } else {
+                    throw new Error('Server error');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
+            });
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
+    });
+});
+
+router.post('/:qid/downvote/:id', (req, res) => {
+    const qid = req.params.qid;
+    const id = req.params.id;
+    const user = req.session.user.userName;
+
+    // fetch the question from the server, check if the current session user has already voted, if yes then throw and error, else add the vote
+    fetch('http://localhost:8080/questions/' + id, {
+        method: 'GET'
+    })
+    .then(response => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            throw new Error('Server error');
+        }
+    })
+    .then(data => {
+        let alreadyVoted = false;
+        for (let i=0;i<data.questionVotes.length; i++) {
+            if (data.questionVotes[i].author.userName === user) {
+                alreadyVoted = true;
+            }
+        }
+        if (alreadyVoted) {
+            throw new Error('You have already voted');
+        } else {
+            const vote = {
+                question: id,
+                author: user,
+                voteType: "down"
+            }
+            fetch('http://localhost:8080/questionvotes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(vote)
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    res.redirect('/questions/' + qid);
+                } else {
+                    throw new Error('Server error');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
+            });
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
     });
 });
 
@@ -258,13 +440,13 @@ router.post('/upvote/:id', (req, res) => {
             })
             .catch((error) => {
                 console.error('Error:', error);
-                res.send('Error');
+                res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
             });
         }
     })
     .catch((error) => {
         console.error('Error:', error);
-        res.send('Error');
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
     });
 });
 
@@ -314,13 +496,13 @@ router.post('/downvote/:id', (req, res) => {
             })
             .catch((error) => {
                 console.error('Error:', error);
-                res.send('Error');
+                res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
             });
         }
     })
     .catch((error) => {
         console.error('Error:', error);
-        res.send('Error');
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
     });
 });
             
@@ -335,6 +517,12 @@ router.post('/update/:id', (req, res) => {
         pic = false;
     else
         pic = true;
+
+    if (pic) {
+        if (req.files.picture.size === 0) {
+            pic = false;
+        }
+    }
 
     if (pic) {
         pic = "/pictures/" + path.basename(req.files.picture.path);
@@ -371,7 +559,7 @@ router.post('/update/:id', (req, res) => {
         }
     })
     .catch((error) => {
-        res.send('Error: ' + error);
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
     });
 });
 
@@ -388,7 +576,7 @@ router.post('/delete/:id', (req, res) => {
         }
     })
     .catch((error) => {
-        res.send('Error: ' + error);
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
     });
 });
 
@@ -409,6 +597,12 @@ router.post('/', (req, res) => {
         test_picture = false;
     } else {
         test_picture = true;
+    }
+
+    if (test_picture) {
+        if (req.files.picture.size === 0) {
+            test_picture = false;
+        } 
     }
 
     console.log(test_picture);
@@ -445,7 +639,7 @@ router.post('/', (req, res) => {
         }
     })
     .catch((error) => {
-        res.send('Error: ' + error);
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
     });
 });
 

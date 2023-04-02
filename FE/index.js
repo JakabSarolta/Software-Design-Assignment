@@ -24,15 +24,7 @@ app.use(session({
 
 app.use('/register', register);
 app.use('/login', login);
-app.use('/welcome', (req, res) => res.render('welcome'));
 
-// app.use((req, res, next) => {
-//     if (req.session.user) {
-//         next();
-//     } else {
-//         res.redirect('/welcome');
-//     }
-// });
 
 app.use('/questions', questions);
 app.use('/answers', answers);
@@ -42,11 +34,20 @@ app.get('/logout', (req, res) => {
     req.session.user = null;
     res.redirect('/login');
 });
+
 app.get('/getCookie', (req, res) => {
     res.send(req.session.user);
 });
 
+
 app.use(express.static(staticDir));
+
+app.use('/', (req, res) => {
+    if (! req.session.user)
+        res.render('astronaut', { title: 'Welcome', subtitle: 'To Stackoverflow', description: 'Log in to browse hte questions or ask others for helpful advice. Click the button below!', buttonlink: 'http://localhost:8081/login', buttontext: 'LOGIN'});
+    else
+        res.render('astronaut', { title: '404', subtitle: 'Page not found', description: 'The page that you were looking for does not exist. Return to questions with the button below.', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
+});
 
 app.listen(8081, () => {
     console.log('App listening on port 8081!');

@@ -27,7 +27,7 @@ router.post('/', (req, res) => {
         if (response.status === 200) {
             return response.json();
         } else {
-            throw new Error('User does not exist');
+            res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'User does not exist with this username or password provided.', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
         }
     })
     .then(data => {
@@ -36,13 +36,13 @@ router.post('/', (req, res) => {
             req.session.user = data;
             res.redirect('/questions');
         } else {
-            throw new Error('Wrong password');
+            res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'Wrong password. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
         }
     })
     .catch((error) => {
         console.error('Error:', error);
         res.type('text');
-        res.send('Error');
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
     });
 });
 

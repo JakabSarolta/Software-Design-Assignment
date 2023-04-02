@@ -9,72 +9,156 @@
     <link rel='stylesheet' type='text/css' media='screen' href='/answers.css'>
 </head>
 <body>
-    <div class="content">
-        <h1><%= question.title %></h1>
-        <p><%= question.content %></p>
-        <p>Tags: <%= tags %></p>
-        <p>Asked by: <%= username %></p>
-        <p>Asked on: <%= question.date %></p>
-        <p>Answers: <%= answers.length %></p>
-        <% if (question.picture != "null"){ %>
-            <img src="<%= question.picture %>" alt="Question picture">
-        <% } %>
-        <a href="/questions">
-            <button type="button" class="register-button btn btn-info text-info-subtle bg-info-subtle">Back to questions</button>
-        </a>
-        <% if (username === question.author.userName) { %>
-            <a href="/questions/update/<%= question.id %>">
-                <button type="button" class="register-button btn btn-info text-info-subtle bg-info-subtle">Update question</button>
-            </a>
-            <form method="POST" action="/questions/delete/<%= question.id %>">
-                <button type="submit" class="register-button btn btn-info text-info-subtle bg-info-subtle">Delete question</button>
-            </form>
-        <% } %>
+    <div class="not-content">
+        <%- include('partials/navbar') %>
     </div>
 
-    <form class="newAnswerForm" enctype="multipart/form-data" method="POST" action="/answers/create/<%= question.id %>">
-        <div class="mb-3">
-            <label for="content" class="form-label">Content</label>
-            <input required type="text" class="form-control bg-info-subtle" id="content" name="content">
-        </div>
-        <div class="mb-3">
-            <label for="picture" class="form-label">Picture</label>
-            <input type="file" class="form-control bg-info-subtle" id="picture" name="picture">
-        </div>
-        <button type="submit" class="register-button btn btn-info text-info-subtle bg-info-subtle">Answer</button>
-    </form>
+    <div class="content col-12">
+        <div class="left col-9">
+            <div class="left-header">
+                <h1><%= question.title %></h1>
+                <%
+                    let date = new Date(question.date);
+                    let year = date.getFullYear();
+                    let month = String(date.getMonth() + 1).padStart(2, '0');
+                    let day = String(date.getDate()).padStart(2, '0');
+                    let hour = String(date.getHours()).padStart(2, '0');
+                    let minute = String(date.getMinutes()).padStart(2, '0');
+                    let formattedDate = `${year}.${month}.${day} ${hour}:${minute}`;
+                %>
+                <p>Asked <%= formattedDate %></p>
+            </div>
 
-    <% for(i = 0; i < question.answers.length; i++) { %>
-        <div class="answer">
-            <p><%= question.answers[i].content %></p>
-            <p>Answered by: <%= question.answers[i].author.userName %></p>
-            <p>Answered on: <%= question.answers[i].date %></p>
-            <p>Upvotes: <%= question.answers[i].upvotes %></p>
-            <p>Downvotes: <%= question.answers[i].downvotes %></p>
-            <p>Vote count: <%= question.answers[i].voteCount %></p>
+            <div class="divider"></div>
 
-            <% if (question.answers[i].picture != "null"){ %>
-                <img src="<%= question.answers[i].picture %>" alt="Answer picture">
+            <div class="question col-12">
+                <div class="question-votecount col-1">
+                    <div class="question-votecount-upvote">
+                        <form method="POST" action="/questions/<%= question.id %>/upvote/<%= question.id %>">
+                            <button <% if (username === question.author.userName || question.alreadyVoted) { %> disabled <% } %> type="submit" class="btn"><i class="fas fa-angle-up"></i></button>
+                        </form>
+                    </div>
+                    <div class="question-votecount-count">
+                        <p><%= question.voteCount %></p>
+                    </div>
+                    <div class="question-votecount-downvote">
+                        <form method="POST" action="/questions/<%= question.id %>/downvote/<%= question.id %>">
+                            <button <% if (username === question.author.userName || question.alreadyVoted) { %> disabled <% } %> type="submit" class="btn"><i class="fas fa-angle-down"></i></button>
+                        </form>
+                    </div>
+                </div>
+                <div class="question-content">
+                    <p class="question-content-text"><%= question.content %></p>
+
+                    <% if (question.picture != "null"){ %>
+                        <div class="question-content-picture">
+                            <img src="<%= question.picture %>" alt="Question picture">
+                        </div>
+                    <% } %>
+
+                    <div class="question-content-tags">
+                        <% for(let j = 0; j < question.tags.length; j++) { %>
+                            <a href="/questions/tag/<%= question.tags[j].name %>"><div type="submit" class="question-content-tag"><%= question.tags[j].name %></div></a>
+                        <% } %>
+                    </div>
+
+                    <div class="question-content-author">
+                        <h4><%= question.author.userName %></h4>
+                    </div>
+
+                    <a href="/questions">
+                        <button type="button" class="register-button btn text-info-subtle bg-info-subtle">Back to questions</button>
+                    </a>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <% if (question.answers.length === 0) { %>
+                <div class="answers">
+                    <h2 class="answer-count">No answers</h2>
+                </div>
+            <% } else { %>
+                <div class="answers">
+                    <% if (question.answers.length === 1) { %>
+                        <h2 class="answer-count">1 answer</h2>
+                    <% } else { %>
+                        <h2 class="answer-count"><%= question.answers.length %> answers</h2>
+                    <% } %>
+                    <% for(i = 0; i < question.answers.length; i++) { %>
+                        <div class="divider"></div>
+                        <div class="answer col-12">
+                            <div class="answer-left col-1">
+                                <div class="answer-votecount">
+                                    <div class="answer-votecount-upvote">
+                                        <form method="POST" action="/answers/upvote/<%= question.id %>/<%= question.answers[i].id %>">
+                                            <button <% if (username === question.answers[i].author.userName || question.answers[i].alreadyVoted) { %> disabled <% } %> type="submit" class="btn"><i class="fas fa-angle-up"></i></button>
+                                        </form>
+                                    </div>
+                                    <div class="answer-votecount-count">
+                                        <p><%= question.answers[i].voteCount %></p>
+                                    </div>
+                                    <div class="answer-votecount-downvote">
+                                        <form method="POST" action="/answers/downvote/<%= question.id %>/<%= question.answers[i].id %>">
+                                            <button <% if (username === question.answers[i].author.userName || question.answers[i].alreadyVoted) { %> disabled <% } %> type="submit" class="btn"><i class="fas fa-angle-down"></i></button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="answer-right ">
+                                <p><%= question.answers[i].content %></p>
+                    
+                                <% if (question.answers[i].picture != "null"){ %>
+                                    <div class="answer-content-picture">
+                                        <img src="<%= question.answers[i].picture %>" alt="Answer picture">
+                                    </div>
+                                <% } %>
+                    
+                                <div class="answer-footer">
+                                    <div class="answer-buttons col-11">
+                                        <% if (username === question.answers[i].author.userName) { %>
+                                            <a href="/answers/update/<%= question.id %>/<%= question.answers[i].id %>">
+                                                <button type="button" class="btn btn-warning answer-button">Edit</button>
+                                            </a>
+                            
+                                            <form method="POST" action="/answers/delete/<%= question.id %>/<%= question.answers[i].id %>">
+                                                <button type="submit" class="btn btn-danger answer-button">Delete</button>
+                                            </form>
+                                        <% } %>
+                                    </div>
+                                    <div class="answer-author-date">
+                                        <%
+                                            date = new Date(question.answers[i].date);
+                                            year = date.getFullYear();
+                                            month = String(date.getMonth() + 1).padStart(2, '0');
+                                            day = String(date.getDate()).padStart(2, '0');
+                                            hour = String(date.getHours()).padStart(2, '0');
+                                            minute = String(date.getMinutes()).padStart(2, '0');
+                                            formattedDate = `${year}.${month}.${day} ${hour}:${minute}`;
+                                        %>
+                                        <p class="answer-date"><%= formattedDate %></p>
+                                        <h4><%= question.answers[i].author.userName %></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
             <% } %>
-
-            <% if ((question.answers[i].author.userName != username) && !question.answers[i].alreadyVoted) { %>
-                <form method="POST" action="/answers/upvote/<%= question.id %>/<%= question.answers[i].id %>">
-                    <button type="submit" class="btn btn-success bottom-btn">Like</button>
-                </form>
-                <form method="POST" action="/answers/downvote/<%= question.id %>/<%= question.answers[i].id %>">
-                    <button type="submit" class="btn btn-danger bottom-btn">Dislike</button>
-                </form>
-            <% } %>
-            <% if (username === question.answers[i].author.userName) { %>
-                <a href="/answers/update/<%= question.id %>/<%= question.answers[i].id %>">
-                    <button type="button" class="register-button btn btn-info text-info-subtle bg-info-subtle">Update answer</button>
-                </a>
-
-                <form method="POST" action="/answers/delete/<%= question.id %>/<%= question.answers[i].id %>">
-                    <button type="submit" class="register-button btn btn-info text-info-subtle bg-info-subtle">Delete answer</button>
-                </form>
-            <% } %>
         </div>
-    <% } %>
+        <div class="right col-3">
+            <form class="newAnswerForm" enctype="multipart/form-data" method="POST" action="/answers/create/<%= question.id %>">
+                <div class="mb-3">
+                    <label for="content" class="form-label">Content</label>
+                    <input required type="text" class="form-control bg-info-subtle" id="content" name="content">
+                </div>
+                <div class="mb-3">
+                    <label for="picture" class="form-label">Picture</label>
+                    <input type="file" class="form-control bg-info-subtle" id="picture" name="picture">
+                </div>
+                <button type="submit" class="register-button btn text-info-subtle bg-info-subtle">Answer</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

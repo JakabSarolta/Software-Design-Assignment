@@ -25,7 +25,7 @@ router.get('/update/:questionId/:answerId', (req, res) => {
         }
     })
     .catch((error) => {
-        res.send('Error: ' + error);
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
     });
 });
 
@@ -76,13 +76,13 @@ router.post('/upvote/:questionId/:answerId', (req, res) => {
             })
             .catch((error) => {
                 console.error('Error:', error);
-                res.send('Error');
+                res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
             });
         }
     })
     .catch((error) => {
         console.error('Error:', error);
-        res.send('Error');
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
     });
 });
 
@@ -133,13 +133,13 @@ router.post('/downvote/:questionId/:answerId', (req, res) => {
             })
             .catch((error) => {
                 console.error('Error:', error);
-                res.send('Error');
+                res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
             });
         }
     })
     .catch((error) => {
         console.error('Error:', error);
-        res.send('Error');
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
     });
 });
 
@@ -154,6 +154,12 @@ router.post('/update/:questionId/:answerId', (req, res) => {
         pic = true;
     }
 
+    if (pic) {
+        if (req.files.picture.size == 0) {
+            pic = false;
+        } 
+    }
+    
     if(pic)
         pic = "/pictures/" + path.basename(req.files.picture.path);
     else
@@ -182,7 +188,7 @@ router.post('/update/:questionId/:answerId', (req, res) => {
         }
     })
     .catch((error) => {
-        res.send('Error: ' + error);
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
     });
 });
 
@@ -195,6 +201,11 @@ router.post('/create/:questionId', (req, res) => {
         pic = false;
     } else {
         pic = true;
+    }
+
+    if(pic){
+        if(req.files.picture.size == 0)
+            pic = false;
     }
 
     if(pic)
@@ -224,7 +235,7 @@ router.post('/create/:questionId', (req, res) => {
         }
     })
     .catch((error) => {
-        res.send('Error: ' + error);
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
     });
 });
 
@@ -242,7 +253,7 @@ router.post('/delete/:questionId/:answerId', (req, res) => {
         }
     })
     .catch((error) => {
-        res.send('Error: ' + error);
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
     });
 });
 

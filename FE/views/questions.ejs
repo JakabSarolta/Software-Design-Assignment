@@ -10,8 +10,10 @@
     
 </head>
 <body>
-    <%- include('partials/navbar') %>
-    
+    <div class="not-content">
+        <%- include('partials/navbar') %>
+    </div>
+
     <div class="content">
         <div class="left col-9">
             <h1 class="left-header">All questions</h1>
@@ -29,11 +31,20 @@
                         <div class="tags col-11">
                             <div class="tags-tags">
                                 <% for(let j = 0; j < questions[i].tags.length; j++) { %>
-                                    <div class="question-tag"><%= questions[i].tags[j].name %></div>
+                                    <a href="/questions/tag/<%= questions[i].tags[j].name %>"><div type="submit" class="question-tag"><%= questions[i].tags[j].name %></div></a>
                                 <% } %>
                             </div>
                             <div class="tags-date">
-                                <p class="question-date"><%= questions[i].date %></p>
+                                <%
+                                    const date = new Date(questions[i].date);
+                                    const year = date.getFullYear();
+                                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                                    const day = String(date.getDate()).padStart(2, '0');
+                                    const hour = String(date.getHours()).padStart(2, '0');
+                                    const minute = String(date.getMinutes()).padStart(2, '0');
+                                    const formattedDate = `${year}.${month}.${day} ${hour}:${minute}`;
+                                %>
+                                <p class="question-date"><%= formattedDate %></p>
                             </div>
                         </div>
 
@@ -61,10 +72,6 @@
                             </div>
                             <h3 class="question-author"><%= questions[i].author.userName %></h3>
                         </div>
-                        <!-- <div class="question-author-date">
-                            <p class="question-date"><%= questions[i].date %></p>
-                            <h2 class="question-author"><%= questions[i].author.userName %></h2>
-                        </div> -->
                     </div>
                     
                 </div>
@@ -88,7 +95,7 @@
                     <label for="picture" class="form-label">Picture</label>
                     <input type="file" class="form-control bg-info-subtle" id="picture" name="picture">
                 </div>
-                <button type="submit" class="submit-button btn btn-info text-info-subtle bg-info-subtle">Add question</button>
+                <button type="submit" class="submit-button btn add-question-button">Post question</button>
             </form>
         </div>
     </div>

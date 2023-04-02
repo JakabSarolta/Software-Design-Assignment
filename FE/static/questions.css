@@ -1,3 +1,13 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans');
+
+* {
+    font-family:"Nunito Sans";
+}
+
+a {
+    text-decoration: none;
+}
+
 .content {
     display: flex;
     flex-direction: row;
@@ -71,6 +81,17 @@
     background-color: #b3e5fc;
 }
 
+.add-question-button {
+    background-color: #cff4fc;
+    cursor: pointer;
+    transition: 0.3s background-color ease-in-out;
+}
+
+.add-question-button:hover {
+    background-color: #69cbf9;
+    color: white;
+}
+
 .buttons {
     display: flex;
     flex-direction: row;
@@ -93,75 +114,6 @@
     color: white;
 }
 
-.question-author-date {
-    
-}
 
 
 
-
-
-
-
-
-
-
-/*
-
-.forms {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-}
-
-.question {
-    border: 1px solid #000000;
-    border-radius: 5px;
-    padding: 5px;
-    margin-bottom: 5px;
-    background-color: #FFFFFF;
-    width: 50%;
-}
-
-.tags {
-    border: 1px solid #000000;
-    border-radius: 5px;
-    padding: 5px;
-    background-color: #FFFFFF;
-}
-
-.submitForm {
-    position: relative;
-    padding: 40px;
-    width: 500px;
-}
-
-.buttons {
-    display: flex;
-    flex-direction: row;
-}
-
-.buttons > * {
-    margin: 10px;
-}
-
-.submit-button {
-    width: 100%;
-}
-
-.tags {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-}
-
-.bottom-btn {
-    width: 100px;
-}
-
-img {
-    max-width: 300px;
-    max-height: 300px;
-} */

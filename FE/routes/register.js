@@ -39,7 +39,7 @@ router.post('/', (req, res) => {
         if (response.status === 200) {
             return response.json();
         } else {
-            throw new Error('User already exists with this username or email');
+            res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'User already exists with this username or email', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
         }
     })
     .then(data => {
@@ -47,8 +47,7 @@ router.post('/', (req, res) => {
     })
     .catch((error) => {
         console.error('Error:', error);
-        res.type('text');
-        res.send('Error');
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
     });
 });
 

@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans');
+
+* {
+    font-family:"Nunito Sans";
+}
+
 body {
     width: 100%;
     height: 100%;
@@ -6,18 +12,20 @@ body {
     justify-content: center; /* horizontal */
 }
 form {
-    border: 1px solid black;
-    border-radius: 5px;
-    top: 250px;
+    top: 150px;
     position: relative;
     padding: 40px;
     width: 500px;
 }
 .register-button {
     width: 100%;
+    cursor: pointer;
+    transition: 0.3s background-color ease-in-out;
 }
 .submit-button {
     width: 45%;
+    cursor: pointer;
+    transition: 0.3s background-color ease-in-out;
 }
 #buttons {
     display: flex;
@@ -26,4 +34,8 @@ form {
 }
 a {
     width: 45%;
+}
+.register-button:hover, .submit-button:hover {
+    background-color: #69cbf9 !important;
+    color: white;
 }

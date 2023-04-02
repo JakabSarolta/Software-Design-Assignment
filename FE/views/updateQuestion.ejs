@@ -9,30 +9,32 @@
     <link rel='stylesheet' type='text/css' media='screen' href='/updateQuestion.css'>
 </head>
 <body>
-    <form class="submitForm" enctype="multipart/form-data" method="POST" action="/questions/update/<%= question.id %>">
-        <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
-            <input required type="text" class="form-control bg-info-subtle" id="title" name="title" placeholder="<%= question.title %>">
-        </div>
-        <div class="mb-3">
-            <label for="content" class="form-label">Content</label>
-            <input required type="text" class="form-control bg-info-subtle" id="content" name="content" placeholder="<%= question.content %>">
-        </div>
-        <div class="mb-3">
-            <label for="tags" class="form-label">Tags</label>
-            <input required type="text" class="form-control bg-info-subtle" id="tags" name="tags" placeholder="<%= tags %>">
-        </div>
-        <div class="mb-3">
-            <label for="picture" class="form-label">Picture</label>
-            <input type="file" class="form-control bg-info-subtle" id="picture" name="picture">
-        </div>
-        
-        <div id="buttons">
-            <button type="submit" class="submit-button btn btn-info text-info-subtle bg-info-subtle">Update</button>
-            <a href="/questions">
-                <button type="button" class="register-button btn btn-info text-info-subtle bg-info-subtle">Cancel</button>
-            </a>
-        </div>
-    </form>
+    <div class="update-form col-4">
+        <form class="update-question-form" enctype="multipart/form-data" method="POST" action="/questions/update/<%= question.id %>">
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input required type="text" class="form-control bg-info-subtle" id="title" name="title" placeholder="<%= question.title %>">
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">Content</label>
+                <input required type="text" class="form-control bg-info-subtle" id="content" name="content" placeholder="<%= question.content %>">
+            </div>
+            <div class="mb-3">
+                <label for="tags" class="form-label">Tags</label>
+                <input required type="text" class="form-control bg-info-subtle" id="tags" name="tags" placeholder="<%= tags %>">
+            </div>
+            <div class="mb-3">
+                <label for="picture" class="form-label">Change to new picture (leave blank if no change)</label>
+                <input type="file" class="form-control bg-info-subtle" id="picture" name="picture">
+            </div>
+            
+            <div id="buttons">
+                <button type="submit" class="submit-button btn text-info-subtle bg-info-subtle">Update</button>
+                <a href="/questions">
+                    <button type="button" class="register-button btn text-info-subtle bg-info-subtle">Cancel</button>
+                </a>
+            </div>
+        </form>
+    </div>
 </body>
 </html>
