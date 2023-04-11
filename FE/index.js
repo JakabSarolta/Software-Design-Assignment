@@ -44,7 +44,7 @@ app.use(express.static(staticDir));
 
 app.use('/', (req, res) => {
     if (! req.session.user)
-        res.render('astronaut', { title: 'Welcome', subtitle: 'To Stackoverflow', description: 'Log in to browse hte questions or ask others for helpful advice. Click the button below!', buttonlink: 'http://localhost:8081/login', buttontext: 'LOGIN'});
+        res.render('astronaut', { title: 'Welcome', subtitle: 'To Stackoverflow', description: 'Log in to browse the questions or ask others for helpful advice. Click the button below!', buttonlink: 'http://localhost:8081/login', buttontext: 'LOGIN'});
     else
         res.render('astronaut', { title: '404', subtitle: 'Page not found', description: 'The page that you were looking for does not exist. Return to questions with the button below.', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
 });
