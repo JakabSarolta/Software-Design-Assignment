@@ -2,6 +2,7 @@ package edu.utcn.stackoverflow.service;
 
 import edu.utcn.stackoverflow.dao.AnswerDao;
 import edu.utcn.stackoverflow.model.Answer;
+import edu.utcn.stackoverflow.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -37,6 +37,15 @@ public class AnswerVotesController {
         AnswerVote answerVote1 = answerVoteService.createAnswerVote(answerVote);
         answerVote1.getAnswer().getAnswerVotes().add(answerVote1);
         answerVote1.getAuthor().getAnswerVotes().add(answerVote1);
+        if (answerVote1.getVoteType().equals("up")){
+            answerVote1.getAnswer().getAuthor().setScore((float) (answerVote1.getAnswer().getAuthor().getScore() + 5.0));
+            userService.createUser(answerVote1.getAnswer().getAuthor());
+        } else {
+            answerVote1.getAnswer().getAuthor().setScore((float) (answerVote1.getAnswer().getAuthor().getScore() - 2.5));
+            userService.createUser(answerVote1.getAnswer().getAuthor());
+            answerVote1.getAuthor().setScore((float) (answerVote1.getAuthor().getScore() - 1.5));
+            userService.createUser(answerVote1.getAuthor());
+        }
         return answerVoteMapper.dtoFromAnswerVote(answerVote1);
     }
 }

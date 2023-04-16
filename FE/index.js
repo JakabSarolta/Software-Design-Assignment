@@ -5,6 +5,7 @@ import register from './routes/register.js';
 import login from './routes/login.js';
 import questions from './routes/questions.js';
 import answers from './routes/answers.js';
+import users from './routes/users.js';
 import morgan from 'morgan';
 import path from 'path';
 import { existsSync, mkdirSync } from 'fs';
@@ -22,6 +23,7 @@ app.use(session({
     saveUninitialized: true,
 }));
 
+app.use('/users', users);
 app.use('/register', register);
 app.use('/login', login);
 

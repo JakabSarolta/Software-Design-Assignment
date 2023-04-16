@@ -3,6 +3,14 @@ import path from 'path';
 
 const router = Router();
 
+router.use('/*', (req, res, next) => {
+    if (req.session.user) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+});
+
 router.get('/update/:questionId/:answerId', (req, res) => {
     const questionId = req.params.questionId;
     const answerId = req.params.answerId;
@@ -17,7 +25,7 @@ router.get('/update/:questionId/:answerId', (req, res) => {
         }
     })
     .then(data => {
-        if(req.session.user.userName === data.author.userName) {
+        if(req.session.user.userName === data.author.userName || req.session.user.role === 1) {
             res.type('.html');
             res.render('updateAnswer', {answer: data, questionId});
         } else {
@@ -25,7 +33,7 @@ router.get('/update/:questionId/:answerId', (req, res) => {
         }
     })
     .catch((error) => {
-        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: error, buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
     });
 });
 

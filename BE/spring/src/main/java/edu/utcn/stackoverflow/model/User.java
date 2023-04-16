@@ -20,6 +20,8 @@ public class User extends BaseEntity {
     private String email;
     private String phoneNumber;
     private Integer role;
+    private Integer banned;
+    private Float score;
     //0 for user, 1 for moderator
 
     // @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "author")

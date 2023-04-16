@@ -3,11 +3,11 @@ import path from 'path';
 
 const router = Router();
 
-router.get('/*', (req, res, next) => {
-    if (!req.session.user) {
-        res.redirect('/login');
+router.use('/*', (req, res, next) => {
+    if (req.session.user) {
+        next();
     } else {
-        next(); // pass control to the next handler (mint a router.get vagy router.post)
+        res.redirect('/login');
     }
 });
 
@@ -81,7 +81,7 @@ router.get('/:id', (req, res) => {
         console.log(data.author);
         answers = data.answers;
         res.type('.html');
-        res.render('answers', {question, answers, tags, username: req.session.user.userName, ftype: null, fvalue: null});
+        res.render('answers', {question, role: req.session.user.role, answers, tags, username: req.session.user.userName, ftype: null, fvalue: null});
     })
     .catch((error) => {
         res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
@@ -127,7 +127,7 @@ router.get('/tag/:tag', (req, res) => {
         data.sort((a, b) => b.id - a.id);
         const questions = data;
         res.type('.html');
-        res.render('questions', {questions, username: req.session.user.userName, ftype: "tag", fvalue: tag});
+        res.render('questions', {questions, role: req.session.user.role, username: req.session.user.userName, ftype: "tag", fvalue: tag});
     })
     .catch((error) => {
         res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
@@ -147,7 +147,7 @@ router.get('/update/:id', (req, res) => {
         }
     })
     .then(data => {
-        if(req.session.user.userName === data.author.userName) {
+        if(req.session.user.userName === data.author.userName || req.session.user.role === 1) {
             let tags = "";
             for (let i = 0; i < data.tags.length; i++) {
                 tags += data.tags[i].name + ";";
@@ -160,7 +160,7 @@ router.get('/update/:id', (req, res) => {
         }
     })
     .catch((error) => {
-        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
+        res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: error, buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
     });
 });
 
@@ -226,7 +226,7 @@ router.post('/filter', (req, res) => {
         data.sort((a, b) => b.id - a.id);
         const questions = data;
         res.type('.html');
-        res.render('questions', {questions, username: req.session.user.userName, ftype, fvalue});
+        res.render('questions', {questions, role: req.session.user.role, username: req.session.user.userName, ftype, fvalue});
     })
     .catch((error) => {
         console.error('Error:', error);
@@ -272,7 +272,7 @@ router.get('/', (req, res) => {
         data.sort((a, b) => b.id - a.id);
         questions = data;
         res.type('.html');
-        res.render('questions', {questions, username: req.session.user.userName, ftype: null, fvalue: null});
+        res.render('questions', {questions, role: req.session.user.role, username: req.session.user.userName, ftype: null, fvalue: null});
     })
     .catch((error) => {
         console.error('Error:', error);

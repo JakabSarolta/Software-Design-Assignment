@@ -23,6 +23,11 @@
                     <div class="question-left col-2">
                         <p><%= questions[i].voteCount %> votecount</p>
                         <p><%= questions[i].answers.length %> answers</p>
+                        <% if(questions[i].author.banned === 0 && role === 1 && questions[i].author.userName !== username) { %>
+                            <form method="POST" action="/users/<%= questions[i].author.id %>/ban">
+                                <button type="submit" class="btn btn-danger bottom-btn question-button">Ban</button>
+                            </form>
+                        <% } %>
                     </div>
                     <div class="question-right col-10">
                         <h3><%= questions[i].title %></h3>
@@ -61,7 +66,7 @@
                                         <button type="submit" class="btn btn-danger bottom-btn question-button">Dislike</button>
                                     </form>
                                 <% } %>
-                                <% if(questions[i].author.userName === username){ %>
+                                <% if(questions[i].author.userName === username || role === 1){ %>
                                     <form method="GET" action="/questions/update/<%= questions[i].id %>">
                                         <button type="submit" class="btn btn-warning bottom-btn question-button">Edit</button>
                                     </form>
@@ -70,7 +75,7 @@
                                     </form>
                                 <% } %>
                             </div>
-                            <h3 class="question-author"><%= questions[i].author.userName %></h3>
+                            <h3 class="question-author"><%= questions[i].author.userName %> [<%= questions[i].author.score %>]</h3>
                         </div>
                     </div>
                     
@@ -78,6 +83,11 @@
             <% } %>
         </div>
         <div class="right col-3">
+            <% if (role === 1) { %>
+                <a href="/users/unban">
+                    <button type="button" class="btn unban-button add-question-button">Unban users</button>
+                </a>
+            <% } %>
             <form class="submitForm" method="POST" action="/questions" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>

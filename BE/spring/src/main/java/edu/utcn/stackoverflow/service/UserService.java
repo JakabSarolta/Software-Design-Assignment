@@ -39,4 +39,8 @@ public class UserService {
     public void deleteUser(User user) {
         userDao.delete(user);
     }
+
+    public Collection<User> findBannedUsers() {
+        return userDao.findByBanned(1);
+    }
 }

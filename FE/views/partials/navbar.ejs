@@ -32,7 +32,7 @@
     <div class="nav-user">
         <div class="nav-user-text">
             <% if (username != null) { %>
-                <%= username %>
+                <%= username %> <% if (role === 1) { %><i class="fas fa-crown"></i><% } %>
             <% } else { %>
                 Guest
             <% } %>

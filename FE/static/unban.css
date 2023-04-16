@@ -1,0 +1,15 @@
+
+.unban-form {
+    top: 160px;
+    position: relative;
+    padding: 40px;
+    width: 500px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    /* border: 1px solid black; */
+}
+
+.unban-form > * {
+    width: 100%;
+}

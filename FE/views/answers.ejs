@@ -46,6 +46,11 @@
                             <button <% if (username === question.author.userName || question.alreadyVoted) { %> disabled <% } %> type="submit" class="btn"><i class="fas fa-angle-down"></i></button>
                         </form>
                     </div>
+                    <% if(question.author.banned === 0 && role === 1 && question.author.userName !== username) { %>
+                        <form method="POST" action="/users/<%= question.author.id %>/ban">
+                            <button type="submit" class="btn btn-danger bottom-btn question-button">Ban</button>
+                        </form>
+                    <% } %>
                 </div>
                 <div class="question-content">
                     <p class="question-content-text"><%= question.content %></p>
@@ -63,7 +68,7 @@
                     </div>
 
                     <div class="question-content-author">
-                        <h4><%= question.author.userName %></h4>
+                        <h4><%= question.author.userName %> [<%= question.author.score %>]</h4>
                     </div>
 
                     <a href="/questions">
@@ -103,6 +108,11 @@
                                             <button <% if (username === question.answers[i].author.userName || question.answers[i].alreadyVoted) { %> disabled <% } %> type="submit" class="btn"><i class="fas fa-angle-down"></i></button>
                                         </form>
                                     </div>
+                                    <% if(question.answers[i].author.banned === 0 && role === 1 && question.answers[i].author.userName !== username) { %>
+                                        <form method="POST" action="/users/<%= question.answers[i].author.id %>/ban">
+                                            <button type="submit" class="btn btn-danger bottom-btn question-button">Ban</button>
+                                        </form>
+                                    <% } %>
                                 </div>
                             </div>
                             <div class="answer-right ">
@@ -116,7 +126,7 @@
                     
                                 <div class="answer-footer">
                                     <div class="answer-buttons col-11">
-                                        <% if (username === question.answers[i].author.userName) { %>
+                                        <% if (username === question.answers[i].author.userName || role === 1) { %>
                                             <a href="/answers/update/<%= question.id %>/<%= question.answers[i].id %>">
                                                 <button type="button" class="btn btn-warning answer-button">Edit</button>
                                             </a>
@@ -137,7 +147,7 @@
                                             formattedDate = `${year}.${month}.${day} ${hour}:${minute}`;
                                         %>
                                         <p class="answer-date"><%= formattedDate %></p>
-                                        <h4><%= question.answers[i].author.userName %></h4>
+                                        <h4><%= question.answers[i].author.userName %> [<%= question.answers[i].author.score %>]</h4>
                                     </div>
                                 </div>
                             </div>

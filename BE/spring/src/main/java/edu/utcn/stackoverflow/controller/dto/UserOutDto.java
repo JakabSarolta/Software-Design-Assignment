@@ -14,4 +14,6 @@ public class UserOutDto {
     private String email;
     private String phoneNumber;
     private Integer role;
+    private Float score;
+    private Integer banned;
 }
