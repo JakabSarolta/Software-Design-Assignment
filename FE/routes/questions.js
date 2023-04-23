@@ -127,7 +127,7 @@ router.get('/tag/:tag', (req, res) => {
         data.sort((a, b) => b.id - a.id);
         const questions = data;
         res.type('.html');
-        res.render('questions', {questions, role: req.session.user.role, username: req.session.user.userName, ftype: "tag", fvalue: tag});
+        res.render('questions', {questions, role: req.session.user.role, username: req.session.user.userName, ftype: "tag", fvalue: tag, filter_questions: true});
     })
     .catch((error) => {
         res.render('astronaut', { title: 'Error', subtitle: 'Server error', description: 'An internal server error occured. Please try again!', buttonlink: 'http://localhost:8081/questions', buttontext: 'QUESTIONS'});
@@ -226,7 +226,7 @@ router.post('/filter', (req, res) => {
         data.sort((a, b) => b.id - a.id);
         const questions = data;
         res.type('.html');
-        res.render('questions', {questions, role: req.session.user.role, username: req.session.user.userName, ftype, fvalue});
+        res.render('questions', {questions, role: req.session.user.role, username: req.session.user.userName, ftype, fvalue, filter_questions: true});
     })
     .catch((error) => {
         console.error('Error:', error);
@@ -235,8 +235,17 @@ router.post('/filter', (req, res) => {
 });
 
 router.get('/', (req, res) => {
+    let url = 'http://localhost:8080/questions?id=-1';
+    const q_id = req.query.id;
+    const greater = req.query.greater;
+    if (greater) {
+        url = 'http://localhost:8080/questions?id=' + q_id + '&greater=' + greater;
+    } else if (q_id) {
+        url = 'http://localhost:8080/questions?id=' + q_id;
+    }
+
     let questions = [];
-    fetch('http://localhost:8080/questions', {
+    fetch(url, {
         method: 'GET'
     })
     .then(response => {
@@ -272,7 +281,7 @@ router.get('/', (req, res) => {
         data.sort((a, b) => b.id - a.id);
         questions = data;
         res.type('.html');
-        res.render('questions', {questions, role: req.session.user.role, username: req.session.user.userName, ftype: null, fvalue: null});
+        res.render('questions', {questions, role: req.session.user.role, username: req.session.user.userName, ftype: null, fvalue: null, filter_questions: false});
     })
     .catch((error) => {
         console.error('Error:', error);

@@ -34,7 +34,7 @@ CREATE TABLE `answers` (
   KEY `FK3erw1a3t0r78st8ty27x6v3g1` (`question_id`),
   CONSTRAINT `FK3erw1a3t0r78st8ty27x6v3g1` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`),
   CONSTRAINT `FK5bp3d5loftq2vjn683ephn75a` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,7 @@ CREATE TABLE `answers` (
 
 LOCK TABLES `answers` WRITE;
 /*!40000 ALTER TABLE `answers` DISABLE KEYS */;
-INSERT INTO `answers` VALUES (1,'Firewalls are studied in computer networks.','2023-03-19 18:22:24.164000','heyyyhoooo',8,1),(2,'Machine learning is connected to deep learning. It is neural networks and generating models to predict stuff.','2023-03-19 18:24:33.659000','heyyyhoooo',7,5),(3,'I think it is one of the fastest growing fields at the moment.','2023-03-19 18:24:52.077000','heyyyhoooo',7,5),(4,'I have heard about Python and Java but I don\'t know where to start from.','2023-03-19 18:25:23.392000','heyyyhoooo',7,8),(5,'Any advice would be appreciated.','2023-03-19 18:25:34.755000','heyyyhoooo',7,8),(6,'One memory is volatile while the other one is not.','2023-03-19 18:26:02.077000','heyyyhoooo',7,2),(7,'I think this subject is way more complicated than that. You should read some of the related literature about the topic.','2023-03-19 18:30:00.435000','heyyyhoooo',14,5),(8,'It is the acronim for a Virtual Private Network that assures more security.','2023-03-19 18:31:04.500000','heyyyhoooo',14,7),(9,'Read only memory - random access memory.','2023-03-19 18:31:25.130000','heyyyhoooo',14,2);
+INSERT INTO `answers` VALUES (1,'Hmm..great question','2023-04-02 22:07:24.065000','/pictures/upload_5021d517d84446289574f6133f4163c1',4,1),(2,'And my additional question is how is it connected to ai?','2023-04-02 22:08:10.717000','null',4,5),(3,'random access memory - read only memory','2023-04-02 22:25:52.886000','/pictures/upload_e4b538f2eed82bb59ee63630daf031d2',9,2),(4,'AI is highly unethical','2023-04-02 22:26:42.557000','/pictures/upload_497055836858fc38038399d9f7755cab',9,4),(5,'No idea, man.','2023-04-02 22:27:14.186000','/pictures/upload_42232b6a77c4147e785336396a49748d',9,3),(6,'Y\'all stupid...','2023-04-02 22:30:20.272000','null',11,3),(7,'Go girl, give us nothing.','2023-04-02 22:30:54.530000','null',11,1),(8,'You should read the famous network book: A top-down aproach.','2023-04-02 22:31:51.279000','null',11,7),(10,'Machine learning is connected to deep learning. It is neural networks and generating models to predict stuff.','2023-04-02 22:32:45.742000','null',11,5),(12,'Open source basically means that anyone can contribute to the development. It is improved by the users and those who invest the time in it.','2023-04-02 22:39:41.026000','null',15,14),(13,'I have heard about Python and Java but I don\'t know where to start from.','2023-04-02 22:39:56.647000','null',15,8),(14,'One memory is volatile while the other one is not.','2023-04-02 22:40:23.322000','null',15,2),(16,'I\'m interested in the topic.','2023-04-16 15:28:48.444000','null',15,13);
 /*!40000 ALTER TABLE `answers` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-19 18:39:32
+-- Dump completed on 2023-04-23 20:58:30

@@ -21,6 +21,7 @@ import java.util.Objects;
 @Slf4j
 @RestController
 @RequestMapping("/questions")
+@CrossOrigin(origins = "*")
 public class QuestionController {
     @Autowired
     private QuestionService questionService;
@@ -61,8 +62,32 @@ public class QuestionController {
         return questionMapper.dtosFromQuestions(questions);
     }
 
+    @GetMapping("/last")
+    public Long getLastQuestionId() {
+        return questionService.getLastQuestion().getId();
+    }
+
+    @GetMapping("/first")
+    public Long getFirstQuestionId() {
+        return questionService.getFirstQuestion().getId();
+    }
+
     @GetMapping
-    public Collection<QuestionOutDto> getAllQuestions() {
+    public Collection<QuestionOutDto> getAllQuestions(
+            @RequestParam(value = "id", required = false) Long id,
+            @RequestParam(value = "greater", required = false) Integer greater
+        ) {
+        if (id != null) {
+            if (greater != null && greater == 1) {
+                Collection<Question> questions = questionService.findByIdGreaterThanEqual(id, 5);
+                return questionMapper.dtosFromQuestions(questions);
+            }
+            if (id == -1) {
+                id = questionService.getLastQuestion().getId();
+            }
+            Collection<Question> questions = questionService.findByIdLessThanEqualOrderByIdDesc(id, 5);
+            return questionMapper.dtosFromQuestions(questions);
+        }
         Collection<Question> questions = questionService.getAllQuestions();
         return questionMapper.dtosFromQuestions(questions);
     }

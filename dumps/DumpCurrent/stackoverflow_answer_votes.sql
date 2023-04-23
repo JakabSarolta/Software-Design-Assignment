@@ -16,30 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `question_tag`
+-- Table structure for table `answer_votes`
 --
 
-DROP TABLE IF EXISTS `question_tag`;
+DROP TABLE IF EXISTS `answer_votes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `question_tag` (
-  `question_id` bigint NOT NULL,
-  `tag_id` bigint NOT NULL,
-  KEY `FK98t1ucn99srvf809bi2ceahpc` (`tag_id`),
-  KEY `FKa0soof5dkct76ysv6b1wp7t01` (`question_id`),
-  CONSTRAINT `FK98t1ucn99srvf809bi2ceahpc` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`),
-  CONSTRAINT `FKa0soof5dkct76ysv6b1wp7t01` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `answer_votes` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `vote_type` varchar(255) DEFAULT NULL,
+  `answer_id` bigint DEFAULT NULL,
+  `user_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKbxpmd373n8cndt4ruup9vesxt` (`answer_id`),
+  KEY `FK15yfsuxa91p72fxtixiv6v05t` (`user_id`),
+  CONSTRAINT `FK15yfsuxa91p72fxtixiv6v05t` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `FKbxpmd373n8cndt4ruup9vesxt` FOREIGN KEY (`answer_id`) REFERENCES `answers` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `question_tag`
+-- Dumping data for table `answer_votes`
 --
 
-LOCK TABLES `question_tag` WRITE;
-/*!40000 ALTER TABLE `question_tag` DISABLE KEYS */;
-INSERT INTO `question_tag` VALUES (1,1),(1,2),(1,3),(2,4),(2,5),(2,6),(2,7),(3,8),(4,9),(4,10),(4,11),(5,12),(5,11),(5,9),(7,14),(7,3),(8,15),(8,16),(9,17),(10,2),(10,18),(10,3),(11,19),(11,20),(12,21),(12,22),(12,23),(13,24),(13,25),(14,15),(14,26),(14,27),(15,28),(15,27),(15,29),(16,30),(16,23);
-/*!40000 ALTER TABLE `question_tag` ENABLE KEYS */;
+LOCK TABLES `answer_votes` WRITE;
+/*!40000 ALTER TABLE `answer_votes` DISABLE KEYS */;
+INSERT INTO `answer_votes` VALUES (1,'down',12,21);
+/*!40000 ALTER TABLE `answer_votes` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -51,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-02 22:52:38
+-- Dump completed on 2023-04-23 20:58:30

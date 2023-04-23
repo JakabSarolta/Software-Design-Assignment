@@ -16,33 +16,27 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `answer_votes`
+-- Table structure for table `tags`
 --
 
-DROP TABLE IF EXISTS `answer_votes`;
+DROP TABLE IF EXISTS `tags`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `answer_votes` (
+CREATE TABLE `tags` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `vote_type` varchar(255) DEFAULT NULL,
-  `answer_id` bigint DEFAULT NULL,
-  `user_id` bigint DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FKbxpmd373n8cndt4ruup9vesxt` (`answer_id`),
-  KEY `FK15yfsuxa91p72fxtixiv6v05t` (`user_id`),
-  CONSTRAINT `FK15yfsuxa91p72fxtixiv6v05t` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `FKbxpmd373n8cndt4ruup9vesxt` FOREIGN KEY (`answer_id`) REFERENCES `answers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `answer_votes`
+-- Dumping data for table `tags`
 --
 
-LOCK TABLES `answer_votes` WRITE;
-/*!40000 ALTER TABLE `answer_votes` DISABLE KEYS */;
-INSERT INTO `answer_votes` VALUES (1,'up',3,14),(2,'up',2,14),(3,'up',6,14);
-/*!40000 ALTER TABLE `answer_votes` ENABLE KEYS */;
+LOCK TABLES `tags` WRITE;
+/*!40000 ALTER TABLE `tags` DISABLE KEYS */;
+INSERT INTO `tags` VALUES (1,'firewall'),(2,'security'),(3,'networks'),(4,'memory'),(5,'architecture'),(6,'rom'),(7,'ram'),(8,'cloudcomputing'),(9,'ai'),(10,'artificialintelligence'),(11,'deeplearning'),(12,'machinelearning'),(14,'vpn'),(15,'coding'),(16,'programming'),(18,'cybersecurity'),(19,'datamining'),(20,'bussiness'),(24,'blockchain'),(25,'crypto'),(26,'opensource'),(27,'software'),(28,'agile'),(29,'development');
+/*!40000 ALTER TABLE `tags` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -54,4 +48,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-19 18:39:33
+-- Dump completed on 2023-04-23 20:58:30

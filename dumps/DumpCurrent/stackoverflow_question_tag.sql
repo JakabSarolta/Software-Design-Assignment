@@ -16,33 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `question_votes`
+-- Table structure for table `question_tag`
 --
 
-DROP TABLE IF EXISTS `question_votes`;
+DROP TABLE IF EXISTS `question_tag`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `question_votes` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `vote_type` varchar(255) DEFAULT NULL,
-  `user_id` bigint DEFAULT NULL,
-  `question_id` bigint DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK9v02son0rrjww1wr11x5gl68u` (`user_id`),
-  KEY `FK1xd1qk3vvt048vghi893xcpo9` (`question_id`),
-  CONSTRAINT `FK1xd1qk3vvt048vghi893xcpo9` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`),
-  CONSTRAINT `FK9v02son0rrjww1wr11x5gl68u` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `question_tag` (
+  `question_id` bigint NOT NULL,
+  `tag_id` bigint NOT NULL,
+  KEY `FK98t1ucn99srvf809bi2ceahpc` (`tag_id`),
+  KEY `FKa0soof5dkct76ysv6b1wp7t01` (`question_id`),
+  CONSTRAINT `FK98t1ucn99srvf809bi2ceahpc` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`),
+  CONSTRAINT `FKa0soof5dkct76ysv6b1wp7t01` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `question_votes`
+-- Dumping data for table `question_tag`
 --
 
-LOCK TABLES `question_votes` WRITE;
-/*!40000 ALTER TABLE `question_votes` DISABLE KEYS */;
-INSERT INTO `question_votes` VALUES (1,'up',8,2),(2,'down',8,1),(3,'up',7,5),(4,'up',7,2),(5,'up',7,1),(6,'up',1,7),(7,'down',1,2),(8,'up',1,1),(9,'up',14,4),(10,'down',14,3),(11,'down',14,1),(12,'up',14,10),(13,'down',14,9),(14,'up',14,6),(15,'up',13,11),(16,'down',13,13),(17,'up',13,12),(18,'up',13,10),(19,'up',13,1),(20,'down',13,2),(21,'up',13,6),(22,'up',13,9),(23,'up',13,7),(24,'up',13,8),(25,'up',13,5),(26,'up',13,4),(27,'up',13,3);
-/*!40000 ALTER TABLE `question_votes` ENABLE KEYS */;
+LOCK TABLES `question_tag` WRITE;
+/*!40000 ALTER TABLE `question_tag` DISABLE KEYS */;
+INSERT INTO `question_tag` VALUES (1,1),(1,2),(1,3),(2,4),(2,5),(2,6),(2,7),(3,8),(4,9),(4,10),(4,11),(5,12),(5,11),(5,9),(7,14),(7,3),(8,15),(8,16),(10,2),(10,18),(10,3),(11,19),(11,20),(13,24),(13,25),(14,15),(14,26),(14,27),(15,28),(15,27),(15,29);
+/*!40000 ALTER TABLE `question_tag` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -54,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-19 18:39:33
+-- Dump completed on 2023-04-23 20:58:29

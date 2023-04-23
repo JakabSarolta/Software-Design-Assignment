@@ -7,9 +7,13 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel='stylesheet' type='text/css' media='screen' href='/questions.css'>
-    
+    <script src="/questions_frontend.js"></script>
 </head>
+<% if (!filter_questions && questions.length > 0) { %>
+<body onload="test_left('<%= questions[0].id %>'); test_right('<%= questions[questions.length - 1].id %>');">
+<% } else { %>
 <body>
+<% } %>
     <div class="not-content">
         <%- include('partials/navbar') %>
     </div>
@@ -79,6 +83,12 @@
                         </div>
                     </div>
                     
+                </div>
+            <% } %>
+            <% if (!filter_questions && questions.length > 0) { %>
+                <div class="page-buttons">
+                    <a id="left-anchor" href="/questions?id=<%= questions[0].id + 1 %>&greater=1"><button id="left-button" class="btn btn-danger"><i class="fas fa-chevron-left"></i></button></a>
+                    <a id="right-anchor" href="/questions?id=<%= questions[questions.length - 1].id - 1 %>"><button id="right-button" class="btn btn-danger"><i class="fas fa-chevron-right"></i></button></a>
                 </div>
             <% } %>
         </div>

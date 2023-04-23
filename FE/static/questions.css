@@ -121,4 +121,13 @@ a {
     transform: translateX(-50%);
 }
 
+.page-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
 
+.page-buttons > a {
+    margin: 10px;
+}
