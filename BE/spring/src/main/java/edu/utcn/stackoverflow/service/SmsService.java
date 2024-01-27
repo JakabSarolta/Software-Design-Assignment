@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SmsService {
-    private String accountSid = "AC71dc7db305ade23bdd1acb40ae28b7eb";
-    private String authToken = "4d65cdf0d420de7512a150e075e14ae9";
-    private String fromPhoneNumber = "+16204104124";
+    private String accountSid = xxx;
+    private String authToken = xxx;
+    private String fromPhoneNumber = xxx;
 
     public void sendSms(String toPhoneNumber, String message) throws TwilioException {
         Twilio.init(accountSid, authToken);
